@@ -1,0 +1,25 @@
+#logo-area {
+  display: flex;
+  justify-content: center; /* Ortada saxlayır */
+  align-items: center;
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-box .image {
+  width: 35px;
+  height: 35px;
+}
+
+.logo-box h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 25px;
+  letter-spacing: 1px;
+  color: black;
+  margin-top: 5px;
+}

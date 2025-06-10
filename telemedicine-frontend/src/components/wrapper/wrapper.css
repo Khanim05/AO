@@ -1,0 +1,37 @@
+.sign-area {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sign-area button {
+    width: 110px;
+    font-family: Poppins, sans-serif;
+    font-size: 14px;
+    height: 34px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+    border-radius: 5px;
+}
+
+.sign-area .btnLogin {
+    background-color: #1d5385;
+}
+
+.sign-area .btnLogin:hover {
+    background-color: #2e76b9;
+    transform: scale(1.03);
+}
+
+.sign-area .btnRegister {
+    background-color: #33ADAB;
+}
+
+.sign-area .btnRegister:hover {
+    background-color: #36c4c1;
+    transform: scale(1.03);
+}

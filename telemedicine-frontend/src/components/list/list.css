@@ -1,0 +1,21 @@
+.list-area a {
+  font-family: 'Poppins', sans-serif; /* və ya digərlərindən biri */
+  font-size: 15px;
+  font-weight: 500;
+  color: #181818; /* Tünd boz və ya istəyə görə mavi */
+  text-decoration: none;
+  padding: 8px 12px;
+  transition: color 0.2s ease-in-out;
+}
+
+.list-area a:hover {
+  color: #33ADAB;; /* Hover rəngi — təbii yaşıl, təmizlik hissi verir */
+}
+
+.list-area{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+}
