@@ -1,0 +1,117 @@
+.doctor-card {
+  position: relative;
+  background: linear-gradient(to bottom right, #ffffff, #f3f4f6);
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  padding: 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-photo1 {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #facc15;
+  margin-bottom: 12px;
+  box-shadow: 0 0 0 4px #fde68a;
+  transition: all 0.3s ease;
+}
+
+.doctor-card:hover .doctor-photo1 {
+  transform: scale(1.05);
+}
+
+.doctor-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.doctor-meta {
+  font-size: 15px;
+  color: #475569;
+  margin: 3px 0;
+}
+
+.status-badge.waiting {
+  margin-top: 14px;
+  display: inline-block;
+  background-color: #fef9c3;
+  color: #b45309;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* İkonlar ayrı künclərdə */
+.accept-icon,
+.delete-icon {
+  position: absolute;
+  top: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+/* ✅ Sol üstdə */
+.accept-icon {
+  left: -30px;
+  background-color: #dcfce7;
+  color: #047857;
+}
+
+.accept-icon:hover {
+  background-color: #bbf7d0;
+  transform: scale(1.1);
+}
+
+/* ❌ Sağ üstdə */
+.delete-icon {
+  right: 35px;
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-icon:hover {
+  background-color: #fecaca;
+  transform: scale(1.1);
+}
+.doctor-actions {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+.doctor-actions button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease, background 0.3s ease;
+}
+

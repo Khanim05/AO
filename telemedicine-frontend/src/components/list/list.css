@@ -1,21 +1,64 @@
+/* UL listin konteyneri */
+.list-area {
+  display: flex;
+  flex-direction: row;        /* Desktop üçün yan-yana */
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Linklərin öz görünüşü */
 .list-area a {
-  font-family: 'Poppins', sans-serif; /* və ya digərlərindən biri */
+  font-family: 'Poppins', sans-serif;
   font-size: 15px;
   font-weight: 500;
-  color: #181818; /* Tünd boz və ya istəyə görə mavi */
+  color: #181818;
   text-decoration: none;
   padding: 8px 12px;
   transition: color 0.2s ease-in-out;
+  display: inline-block;
+  text-align: center;
 }
 
-.list-area a:hover {
-  color: #33ADAB;; /* Hover rəngi — təbii yaşıl, təmizlik hissi verir */
+/* Hover effekti */
+.nav-link:hover {
+  color: #33ADAB;
+}
+.nav-link{
+  text-decoration: none;
+  color: #333;
+  padding: 8px 12px;
+  transition: color 0.3s ease;
 }
 
-.list-area{
-    display: flex;
-    gap: 10px;
-    justify-content: center;
+.nav-link.active {
+  font-family: Poppins;
+  color: #33adab;
+  font-weight: 600;
+}
+body.dark .nav-link {
+  color: #e0e0e0; /* Açıq boz-ağ */
+}
+
+body.dark .nav-link.active {
+  color: #38bdf8; /* Cyan vurğulu */
+  font-weight: 600;
+}
+
+/* RESPONSIVE: Mobil üçün alt-alta düzülməsi */
+@media (max-width: 768px) {
+  .list-area {
+    flex-direction: column;
+    gap: 5px;
     align-items: center;
-    margin-top: 8px;
+    width: 100%;
+  }
+
+  .list-area a {
+    width: 100%;
+    text-align: center;
+  }
 }

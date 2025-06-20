@@ -1,0 +1,83 @@
+.photo-upload-container {
+  max-width: 400px;
+  margin: 60px auto;
+  background-color: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-upload-container h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.image-upload-label {
+  border: 3px solid #6a00ff;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: transform 0.3s ease;
+}
+
+.image-upload-label:hover {
+  transform: scale(1.03);
+}
+
+.image-upload-label input[type="file"] {
+  display: none;
+}
+
+.image-upload-label img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.step-buttons-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 15px;
+}
+
+.upload-button,
+.back-button {
+  flex: 1;
+  padding: 12px 0;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-button {
+  background-color: #6a00ff;
+  color: white;
+}
+
+.upload-button:hover {
+  background-color: #5300cc;
+}
+
+.back-button {
+  background-color: #eeeeee;
+  color: #333;
+}
+
+.back-button:hover {
+  background-color: #d6d6d6;
+}

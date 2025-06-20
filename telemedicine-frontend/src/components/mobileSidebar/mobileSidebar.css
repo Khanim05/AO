@@ -1,0 +1,87 @@
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 320px;
+  background-color: #fff;
+  z-index: 999;
+  padding: 20px;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.close-btn {
+  font-size: 22px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-links a {
+  text-decoration: none;
+  color: #181818;
+  font-size: 16px;
+  font-family: Poppins;
+}
+.sidebar-links a:hover{
+  color: #33ADAB;
+}
+
+
+.sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btnLogin, .btnRegister {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btnLogin {
+  background-color: #1d5385;
+}
+
+.btnRegister {
+  background-color: #33ADAB;
+}
+
+.sidebar-contact p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.sidebar-social a {
+  margin-right: 10px;
+  font-size: 18px;
+  color: #181818;
+}
+.icon{
+    color: black;
+}
+.icon:hover{
+    color: #1d5385;
+}

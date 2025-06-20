@@ -1,37 +1,32 @@
 .sign-area {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
 }
 
 .sign-area button {
-    width: 110px;
-    font-family: Poppins, sans-serif;
-    font-size: 14px;
-    height: 34px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
-    border-radius: 5px;
+  width: 120px;
+  height: 38px;
+  border: none;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
-.sign-area .btnLogin {
-    background-color: #1d5385;
+.btnLogin {
+  background-color: #1d5385;
 }
 
-.sign-area .btnLogin:hover {
-    background-color: #2e76b9;
-    transform: scale(1.03);
+.btnRegister {
+  background-color: #33ADAB;
 }
 
-.sign-area .btnRegister {
-    background-color: #33ADAB;
-}
-
-.sign-area .btnRegister:hover {
-    background-color: #36c4c1;
-    transform: scale(1.03);
+.btnLogin:hover,
+.btnRegister:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }

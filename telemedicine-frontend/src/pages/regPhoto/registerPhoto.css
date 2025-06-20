@@ -1,0 +1,77 @@
+.photo-upload-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #eef1f4, #ffffff);
+  font-family: 'Poppins', sans-serif;
+}
+
+.upload-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.upload-card h2 {
+  margin-bottom: 30px;
+  font-size: 26px;
+  color: #333;
+}
+
+.image-preview {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-placeholder {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.upload-placeholder i {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.image-preview img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #6200ea;
+}
+
+.submit-photo-btn {
+  padding: 12px 25px;
+  background-color: #6200ea;
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-photo-btn:hover {
+  background-color: #4a00b4;
+  transform: translateY(-2px);
+}

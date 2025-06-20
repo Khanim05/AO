@@ -1,3 +1,4 @@
+
 *{
   margin: 0;
   padding: 0;
@@ -12,4 +13,43 @@ a{
 img{
   width: 100%;
   height: 100%;
+}
+
+/* Ana səhifənin əsas fonu */
+body.dark .home-page{
+  background-color: #121212;
+  color: #f1f1f1;
+}
+/* DARK MODE üçün uyğun stillər */
+
+body.dark .slider-container {
+  background-color: #1a1a1a;
+}
+
+body.dark .slider-content h2,
+body.dark .slider-content p {
+  color: #ffffff;
+}
+
+body.dark .slider-btn {
+  background-color: #04478f;
+  color: #fff;
+  border: none;
+}
+
+body.dark .slider-btn:hover {
+  background-color: #0056b3;
+}
+body.dark .slider-img {
+  filter: brightness(0.25);
+}
+.slider-btn {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+body.dark .navbar-container {
+  background-color: #1e1e1e;
+}
+body.dark .fixed {
+  background-color: #1e1e1e !important;
+  color: white;
 }

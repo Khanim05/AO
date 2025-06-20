@@ -1,27 +1,60 @@
 import "./list.css";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 const List = () => {
   return (
     <div id="list-area">
-
-        <ul className="list-area">
+      <ul className="list-area">
         <li>
-          <Link to="/">Ana Səhifə</Link>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Ana Səhifə
+          </NavLink>
         </li>
         <li>
-          <Link to="/about">Haqqımızda</Link>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Haqqımızda
+          </NavLink>
         </li>
         <li>
-          <Link to="/doctors">Həkimlərimiz</Link>
+          <NavLink
+            to="/doctors"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Həkimlərimiz
+          </NavLink>
         </li>
-       <li>
-        <Link to='/blog'>Bloq
-        </Link>
-       </li>
         <li>
-          <Link to="/contact">Contact</Link>
+          <NavLink
+            to="blog"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Bloq
+          </NavLink>
         </li>
-      </ul>  
+        <li>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Əlaqə
+          </NavLink>
+        </li>
+      </ul>
     </div>
   );
 };

@@ -1,8 +1,19 @@
-import { Navigate } from 'react-router-dom'
-import {useSelector} from 'react-redux'
-const PrivateRoute = ({children}) => {
-  const { token } = useSelector(state => state.auth)
-  return token ? children : <Navigate to="/login" />
-}
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-export default PrivateRoute
+const PrivateRoute = ({ children, role }) => {
+  const { token, user, justLoggetOut } = useSelector((state) => state.auth);
+
+  if (!token || !user) {
+    // Logout-dan sonra yönləndirməni dəyiş
+    return <Navigate to={justLoggetOut ? "/" : "/login"} replace />;
+  }
+
+  if (role && !role.includes(user.role)) {
+    return <Navigate to="/404" replace />;
+  }
+
+  return children;
+};
+
+export default PrivateRoute;

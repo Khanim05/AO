@@ -1,0 +1,98 @@
+/* Container for the doctors section */
+.doctors-section {
+  padding: 80px 20px;
+  background-color: #f7fafd;
+  text-align: center;
+}
+
+.section-title-doctor {
+  font-size: 32px;
+  color: #1e2d3b;
+  font-weight: 600;
+  margin-bottom: 50px;
+}
+
+/* Doctor card styles */
+.doctor-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  text-align: center;
+  margin: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.doctor-image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.doctor-image img {
+  width: 100%;
+  
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.3s ease;
+  border-radius: 12px;
+}
+
+.doctor-image:hover img {
+  transform: scale(1.05);
+}
+
+.overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.doctor-image:hover .overlay {
+  opacity: 1;
+}
+
+.overlay-button {
+  padding: 10px 20px;
+  background: #33adab;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+}
+
+.overlay-button:hover {
+  background: #289795;
+}
+
+.doctor-card h3 {
+  font-size: 20px;
+  margin-top: 20px;
+  color: #1e2d3b;
+}
+
+.doctor-card p {
+  font-size: 16px;
+  color: #555;
+  margin: 8px 0;
+}
+
+.doctor-card span {
+  font-size: 14px;
+  color: #888;
+}

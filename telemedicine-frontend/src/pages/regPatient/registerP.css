@@ -1,0 +1,249 @@
+/* Arxa fon və ümumi layout */
+.register-container-glass {
+  background: linear-gradient(135deg, #d7e0e0, #ffffff);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  padding: 40px 20px;
+}
+
+/* Şüşə effektli kart */
+.glass-card {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+/* Sol şəkil sahəsi */
+.glass-left {
+  flex: 1;
+  min-height: 500px;
+}
+
+.glass-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sağ form sahəsi */
+.glass-right {
+  flex: 1;
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.glass-right h2 {
+  font-size: 36px;
+  color: #2d2e32;
+  margin-bottom: 30px;
+}
+
+/* Form və inputlar */
+.glass-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-form input {
+  padding: 16px;
+  width: 100%;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.glass-form input:focus {
+  border-color: #6200ea;
+  box-shadow: 0 0 8px rgba(98, 0, 234, 0.3);
+  outline: none;
+}
+
+/* Submit düyməsi */
+.glass-form button {
+  background-color: #6200ea;
+  color: white;
+  padding: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.glass-form button:hover {
+  background-color: #4a00b4;
+  transform: translateY(-2px);
+}
+
+/* Error mesajı */
+.error {
+  color: #d32f2f;
+  font-size: 13px;
+  margin: 6px;
+  margin-bottom: -5px;
+}
+.input-error {
+  border: 1px solid #d32f2f !important;
+  box-shadow: 0 0 5px rgba(211, 47, 47, 0.3);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  animation: shake 0.3s ease;
+}
+.glass-form input {
+  padding: 16px;
+  width: 100%;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+/* Tarix seçimi üçün özəl görünüş */
+/* Input hissəsi */
+.fancy-datepicker {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.85);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  max-width: 100%;
+  width: 270px !important;
+
+}
+
+/* Ay və il başlığı üçün stil */
+.fancy-calendar .react-datepicker__current-month {
+  font-family: 'Poppins', sans-serif;
+  font-size: 23px;
+  font-weight: 600;
+  color: #333;
+}
+
+
+.fancy-datepicker:focus {
+  border-color: #514861;
+  box-shadow: 0 0 8px rgba(126, 87, 194, 0.4);
+  outline: none;
+}
+
+/* Seçim error border */
+.error-border {
+  border: 1px solid #d32f2f !important;
+}
+
+
+/* Calendar container */
+.fancy-calendar {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: none;
+  padding: 10px;
+  animation: slideUp 0.4s ease;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Calendar animasiyası */
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* Calendar başlıq */
+.fancy-calendar .react-datepicker__header {
+  background-color: #7e57c2;
+  color: #fff;
+  border-radius: 16px 16px 0 0;
+  border-bottom: none;
+}
+
+/* Gün seçimi */
+.fancy-calendar .react-datepicker__day--selected,
+.fancy-calendar .react-datepicker__day--keyboard-selected {
+  background-color: #7e57c2 !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+.fancy-calendar .react-datepicker__day:hover {
+  background-color: #ede7f6;
+  color: #4a148c;
+  border-radius: 50%;
+}
+
+.input-group label {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 6px;
+  font-weight: 500;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-group input:focus + label,
+.input-group .fancy-datepicker:focus + label {
+  color: #6200ea;
+}
+
+.login-redirect {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+  color: #333;
+}
+
+.login-redirect a {
+  color: #6200ea;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.login-redirect a:hover {
+  color: #4a00b4;
+}
+
+
+/* Responsiv üçün */
+@media (max-width: 992px) {
+  .glass-card {
+    flex-direction: column;
+  }
+  .glass-left {
+    height: 300px;
+  }
+  .glass-right {
+    padding: 40px 25px;
+  }
+}

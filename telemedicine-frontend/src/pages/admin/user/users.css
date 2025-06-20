@@ -1,0 +1,145 @@
+.user-page {
+  padding: 40px 20px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  overflow-x: hidden; /* 👈 Əsas budur */
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #111827;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%; /* 👈 genişlik sərhəddə qalsın */
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.user-card {
+  background: linear-gradient(to top right, #ffffff, #f0f4f8);
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-6px);
+}
+
+.user-photo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 16px;
+  border: 3px solid #3b82f6;
+  box-shadow: 0 0 0 4px #e0f2fe;
+}
+
+.user-icon-avatar {
+  width: 90px;
+  height: 90px;
+  background-color: #dbeafe;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  font-size: 32px;
+  box-shadow: 0 0 0 4px #e0f2fe;
+}
+
+.user-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.user-info p {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 4px 0;
+  word-break: break-word;
+}
+
+.status-badge.user-status {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #d1fae5;
+  color: #047857;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge .check {
+  color: #047857;
+}
+
+@media (max-width: 1024px) {
+  .user-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 0 10px;
+  }
+
+  .user-card {
+    padding: 20px 16px;
+  }
+
+  .user-photo,
+  .user-icon-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 28px;
+  }
+
+  .user-info h3 {
+    font-size: 16px;
+  }
+
+  .user-info p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .user-grid {
+    grid-template-columns: 1fr;
+    padding: 0 8px;
+  }
+
+  .user-card {
+    padding: 18px 14px;
+  }
+
+  .status-badge.user-status {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+}
+

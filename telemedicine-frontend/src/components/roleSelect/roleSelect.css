@@ -1,0 +1,52 @@
+.role-select {
+  text-align: center;
+  margin-top: 50px;
+  font-family: 'Poppins', sans-serif;
+  color: #1d1d1d;
+}
+
+.role-select h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 40px;
+  color: #1d5385;
+}
+
+.role-options {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.role-card {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 40px 30px;
+  width: 240px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-align: center;
+}
+
+.role-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  background: rgba(51, 173, 171, 0.15);
+  border-color: #33ADAB;
+  box-shadow: 0 12px 40px rgba(51, 173, 171, 0.2);
+}
+
+.role-card .icon {
+  font-size: 44px;
+  color: #33ADAB;
+  margin-bottom: 15px;
+}
+
+.role-card h3 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1d1d1d;
+}

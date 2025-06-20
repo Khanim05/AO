@@ -1,0 +1,60 @@
+.doctor-seans-page {
+  padding: 40px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.doctor-seans-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 10px;
+}
+
+.doctor-seans-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+.doctor-seans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.seans-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.seans-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.seans-card h3 {
+  font-size: 18px;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.seans-card p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+@media (max-width: 600px) {
+  .doctor-seans-page {
+    padding: 20px;
+  }
+
+  .seans-card {
+    padding: 20px;
+  }
+}

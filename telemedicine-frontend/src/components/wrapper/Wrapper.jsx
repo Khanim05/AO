@@ -1,35 +1,54 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import "./wrapper.css"; // stil varsa
-import Button from "react-bootstrap/Button";
-
+import { motion } from "framer-motion";
+import "./wrapper.css"
 const Wrapper = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const [fadeOut, setFadeOut] = useState(false);
+  const [targetRoute, setTargetRoute] = useState("");
+
+  const handleClick = (path) => {
+    setTargetRoute(path);
+    setFadeOut(true);
+  };
+
+  React.useEffect(() => {
+    if (fadeOut && targetRoute) {
+      const timeout = setTimeout(() => {
+        navigate(targetRoute);
+      }, 400);
+      return () => clearTimeout(timeout);
+    }
+  }, [fadeOut, targetRoute, navigate]);
 
   return (
-    <div className="wrapper">
-      {token ? (
-        <Link to="/profile" className="nav-link">
+    <motion.div
+      className="sign-area"
+      initial={{ opacity: 1, scale: 1 }}
+      animate={{ opacity: fadeOut ? 0 : 1, scale: fadeOut ? 0.95 : 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      {token && user?.role === "Patient" ? (
+        <button className="btnLogin" onClick={() => handleClick("/profile")}>
           Profil
-        </Link>
+        </button>
       ) : (
         <>
-          <div className="sign-area">
-            <Link to="/login" className="nav-link">
-              <Button variant="success" className="btnLogin">
+          {!token && (
+            <>
+              <button className="btnLogin" onClick={() => handleClick("/login")}>
                 Daxil Ol
-              </Button>
-            </Link>
-            <Link to="/register" className="nav-link">
-              <Button variant="success" className="btnRegister">
+              </button>
+              <button className="btnRegister" onClick={() => handleClick("/register")}>
                 Qeydiyyat
-              </Button>
-            </Link>
-          </div>
+              </button>
+            </>
+          )}
         </>
       )}
-    </div>
+    </motion.div>
   );
 };
 

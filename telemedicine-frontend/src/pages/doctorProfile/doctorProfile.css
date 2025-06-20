@@ -1,0 +1,81 @@
+.doctor-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.doctor-sidebar {
+  width: 220px;
+  background-color: #f3f4f6;
+  padding: 1.5rem;
+  border-right: 1px solid #e5e7eb;
+}
+
+.doctor-sidebar h2 {
+  color: #0f62fe;
+  font-size: 20px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.doctor-nav a {
+  display: block;
+  margin-bottom: 1rem;
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.doctor-nav a:hover {
+  background-color: #e0e7ff;
+  color: #1d4ed8;
+}
+
+.doctor-active-link {
+  background-color: #0f62fe;
+  color: white !important;
+}
+
+.doctor-logout-btn {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.doctor-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-x: auto;
+}
+
+/* Mobil uyğunluq */
+@media (max-width: 768px) {
+  .doctor-layout {
+    flex-direction: column;
+  }
+
+  .doctor-sidebar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .doctor-sidebar h2 {
+    display: none;
+  }
+
+  .doctor-main {
+    padding: 1rem;
+  }
+}

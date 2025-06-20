@@ -1,6 +1,48 @@
-.navbar-area{
+
+.menu-toggle {
+  display: none;
+}
+.nav-content-mobile a {
+  width: 100%;
+  text-align: center;
+}
+.hidden-logo {
+  visibility: hidden;
+}
+
+/* Mobil görünüş üçün */
+@media (max-width: 768px) {
+  .nav-desktop {
+    display: none !important;
+  }
+
+  .menu-toggle {
+    display: block;
+    font-size: 28px;
+    cursor: pointer;
+  }
+
+  .nav-content-mobile {
     display: flex;
-    justify-content: space-between;
-    height: 100%;
+    flex-direction: column;
     align-items: center;
+    background-color: white;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 20px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+    gap: 16px;
+  }
+.list-area,
+.sign-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* <-- Bu sətir vacibdir */
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
 }
