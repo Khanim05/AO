@@ -96,3 +96,65 @@
   font-size: 14px;
   color: #888;
 }
+
+
+/* ============================== */
+/*         DARK MODE             */
+/* ============================== */
+body.dark .doctors-section {
+  background-color: #121212;
+}
+
+body.dark .section-title-doctor {
+  color: #f1f1f1;
+}
+
+body.dark .doctor-card {
+  background: #1e1e1e;
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.04);
+}
+
+body.dark .doctor-card h3,
+body.dark .doctor-info h3 {
+  color: #ffffff;
+}
+
+body.dark .doctor-card p {
+  color: #cccccc;
+}
+
+body.dark .doctor-card span,
+body.dark .experience {
+  color: #999999;
+}
+
+body.dark .specialty {
+  color: #bbbbbb;
+}
+
+body.dark .doctor-photo {
+  background-color: #2a2a2a;
+}
+
+body.dark .overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+body.dark .overlay-button {
+  background-color: #40a9ff;
+  color: white;
+}
+
+body.dark .overlay-button:hover {
+  background-color: #1e8de2;
+}
+
+body.dark .appointment-btn {
+  background-color: #40a9ff;
+  color: white;
+}
+
+body.dark .appointment-btn:hover {
+  background-color: #1e8de2;
+}
+

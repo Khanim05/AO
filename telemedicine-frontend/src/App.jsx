@@ -78,13 +78,28 @@ function App() {
               <Profile />
             </PrivateRoute>
           ),
-          
-            children: [
-        { index: true, element: <Navigate to="appointmentP" /> }, // default yönləndirmə
-        { path: "myProfile", element: <Myprofile /> },
-        { path: "appointmentP", element: <AppointP /> },
-        { path: "messagesP", element: <Messages /> },
-        { path: "settingP", element: <Setting/> },
+
+          children: [
+            { index: true, element: <Navigate to="appointmentP" /> }, // default yönləndirmə
+            { path: "myProfile", element: <Myprofile /> },
+            { path: "appointmentP", element: <AppointP /> },
+            { path: "messagesP", element: <Messages /> },
+            { path: "settingP", element: <Setting /> },
+          ],
+        },
+        {
+          path: "doctor",
+          element: (
+            <PrivateRoute role={["Doctor"]}>
+              <DoctorProfile />
+            </PrivateRoute>
+          ),
+          children: [
+            { index: true, element: <Navigate to="appointmentD" /> }, // default yönləndirmə
+            { path: "appointmentD", element: <AppointD /> }, // boş olsa da işləyir
+            { path: "myProfileDoctor", element: <MyProfileD /> },
+            { path: "messagesD", element: <MessagesD /> },
+            { path: "settingD", element: <SettingD /> },
           ],
         },
       ],
@@ -99,8 +114,8 @@ function App() {
       ],
     },
     { path: "login", element: <Login /> },
-    {path:'forgot-password',element:<ForgotPassword/>},
-    {path:"reset-password",element:<ResetPassword/>},
+    { path: "forgot-password", element: <ForgotPassword /> },
+    { path: "reset-password", element: <ResetPassword /> },
     {
       path: "admin",
       element: (
@@ -110,28 +125,13 @@ function App() {
       ),
       children: [
         { index: true, element: <Navigate to="dashboard" /> }, // default yönləndirmə
-        { path: "dashboard", element:<Dashboard/> }, // boş olsa da işləyir
+        { path: "dashboard", element: <Dashboard /> }, // boş olsa da işləyir
         { path: "users", element: <Users /> },
         { path: "accept-doctor", element: <AcceptDoctor /> },
         { path: "pending-doctor", element: <PendingDoctor /> },
         { path: "appointment", element: <Appointment /> },
-        {path:"doctor-seans",element:<DoctorSeans/>}
+        { path: "doctor-seans", element: <DoctorSeans /> },
       ],
-    },
-    {
-      path: "doctor",
-      element: (
-        <PrivateRoute role={["Doctor"]}>
-          <DoctorProfile />
-        </PrivateRoute>
-      ),
-      children: [
-        { index: true, element: <Navigate to="appointmentD" /> }, // default yönləndirmə
-        { path: "appointmentD", element:<AppointD/> }, // boş olsa da işləyir
-        { path: "myProfileDoctor", element: <MyProfileD/> },
-        { path: "messagesD", element: <MessagesD /> },
-        { path: "settingD", element: <SettingD/> },
-          ],
     },
     { path: "*", element: <NotF /> },
   ]);
@@ -143,3 +143,4 @@ function App() {
 }
 
 export default App;
+

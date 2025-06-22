@@ -1,7 +1,7 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/slice/authSlice";
-import "./doctorProfile.css"; // fərqli stil faylı
+import "./doctorProfile.css";
 
 const DoctorProfile = () => {
   const dispatch = useDispatch();
@@ -16,9 +16,9 @@ const DoctorProfile = () => {
 
   return (
     <div className="doctor-layout">
-      {/* SOL MENU */}
+      {/* Sidebar */}
       <aside className="doctor-sidebar">
-        <h2>Doctor Panel</h2>
+        <h2>Həkim Paneli</h2>
         <nav className="doctor-nav">
           <NavLink
             to="/doctor/myProfileDoctor"
@@ -50,7 +50,7 @@ const DoctorProfile = () => {
         </nav>
       </aside>
 
-      {/* SAĞ TƏRƏF */}
+      {/* Content */}
       <main className="doctor-main">
         <Outlet />
       </main>

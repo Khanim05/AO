@@ -73,12 +73,7 @@ const Admin = () => {
               )}
             </div>
           </div>
-          <NavLink to="/admin/appointment" className="admin-link">
-            <FaCalendarAlt /> Appointments
-          </NavLink>
-          <NavLink to="/admin/settings" className="admin-link">
-            <FaCog /> Settings
-          </NavLink>
+
           <button className="admin-logout" onClick={handleLogout}>
             <FaSignOutAlt /> Logout
           </button>

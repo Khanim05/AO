@@ -16,7 +16,14 @@ const MessagesD = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setPatients(res.data);
+
+        // 🔥 Burada təkrar userId-ləri filter et
+        const uniquePatients = Array.from(
+          new Map(res.data.map((p) => [p.id, p])).values()
+        );
+
+        console.log("🧼 Təmiz pasiyentlər:", uniquePatients);
+        setPatients(uniquePatients);
       } catch (err) {
         console.error("Pasiyentləri yükləmək mümkün olmadı:", err);
       }
@@ -38,10 +45,7 @@ const MessagesD = () => {
               }`}
               onClick={() => setSelectedPatient(patient)}
             >
-              <img
-                src={patient.imgUrl || "/default-avatar.png"}
-                alt="avatar"
-              />
+              <img src={patient.imgUrl || "/default-avatar.png"} alt="avatar" />
               <span className="name-surname">
                 {patient.name} {patient.surname}
               </span>

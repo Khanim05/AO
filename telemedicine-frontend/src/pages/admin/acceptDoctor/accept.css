@@ -83,3 +83,47 @@
 .status-badge .check{
     color: green;
 }
+
+body.dark .doctor-grid {
+  background-color: #1e1e1e;
+}
+
+body.dark .doctor-card {
+  background: linear-gradient(to top right, #2a2a2a, #1f1f1f);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .doctor-card:hover {
+  box-shadow: 0 16px 40px rgba(255, 255, 255, 0.08);
+}
+
+body.dark .doctor-photo {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 5px #1e3a8a;
+}
+
+body.dark .doctor-name {
+  color: #f3f4f6;
+}
+
+body.dark .doctor-meta {
+  color: #9ca3af;
+}
+
+body.dark .status-badge {
+  background-color: #064e3b;
+  color: #34d399;
+}
+
+body.dark .status-badge .check {
+  color: #34d399;
+}
+
+body.dark .delete-icon {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+body.dark .delete-icon:hover {
+  background-color: #991b1b;
+}

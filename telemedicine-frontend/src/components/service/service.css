@@ -52,3 +52,38 @@
   color: #666;
   margin-top: 10px;
 }
+
+/* ============================== */
+/*         DARK MODE             */
+/* ============================== */
+body.dark .services-section {
+  background-color: #121212;
+}
+
+body.dark .services-section h2 {
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .service-card {
+  background-color: #1e1e1e;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.03);
+}
+
+body.dark .service-card:hover {
+  box-shadow: 0 16px 32px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .service-title {
+  color: #f1f1f1;
+}
+
+body.dark .service-desc {
+  color: #bbbbbb;
+}
+
+body.dark .service-icon {
+  color: #40a9ff;
+  filter: drop-shadow(0 0 4px #40a9ff);
+}
+

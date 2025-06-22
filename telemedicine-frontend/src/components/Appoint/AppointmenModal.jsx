@@ -121,7 +121,13 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
 
         {!confirmationMsg && (
           <>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}
+            >
               <label htmlFor="datepicker" style={{ fontWeight: 600 }}>
                 Tarixi seçin:
               </label>
@@ -150,7 +156,11 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
               {availableSlots.map((slot, i) => (
                 <button
                   key={i}
-                  className={`slot-btn ${selectedSlot?.scheduleId === slot.scheduleId ? "selected" : ""}`}
+                  className={`slot-btn ${
+                    selectedSlot?.scheduleId === slot.scheduleId
+                      ? "selected"
+                      : ""
+                  }`}
                   onClick={() => setSelectedSlot(slot)}
                 >
                   {formatHourMinute(slot.time)} - {formatHourMinute(slot.end)}
@@ -159,16 +169,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
             </div>
 
             {selectedSlot && (
-              <div
-                style={{
-                  position: "sticky",
-                  bottom: 0,
-                  background: "white",
-                  paddingTop: "1rem",
-                  marginTop: "1rem",
-                  borderTop: "1px solid #eee",
-                }}
-              >
+              <div className="confirm-wrapper">
                 <button className="confirm-btn" onClick={handleBook}>
                   Təsdiqlə
                 </button>

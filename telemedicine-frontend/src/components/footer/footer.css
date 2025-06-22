@@ -1,0 +1,137 @@
+.footer-modern {
+  background-color: #f1f5f9;
+  padding: 50px 30px 20px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #374151;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.footer-column p {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #4b5563;
+  cursor: pointer;
+}
+.footer-column p:hover {
+  color: #2563eb;
+}
+
+.newsletter {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.newsletter input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.newsletter button {
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.newsletter button:hover {
+  background-color: #2563eb;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.footer-socials svg {
+  font-size: 18px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.footer-socials svg:hover {
+  color: #2563eb;
+}
+
+.footer-bottom-modern {
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 15px;
+}
+
+/* Dark Mode */
+body.dark .footer-modern {
+  background-color: #1e1e1e;
+  color: #d1d5db;
+}
+
+body.dark .footer-column h4 {
+  color: #f9fafb;
+}
+
+body.dark .footer-column p {
+  color: #d1d5db;
+}
+body.dark .footer-column p:hover {
+  color: #93c5fd;
+}
+
+body.dark .newsletter input {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  color: #e5e7eb;
+}
+
+body.dark .newsletter button {
+  background-color: #3b82f6;
+}
+body.dark .newsletter button:hover {
+  background-color: #2563eb;
+}
+
+body.dark .footer-socials svg {
+  color: #d1d5db;
+}
+body.dark .footer-socials svg:hover {
+  color: #93c5fd;
+}
+
+body.dark .footer-bottom-modern {
+  color: #9ca3af;
+  border-top: 1px solid #374151;
+}
+
+@media (max-width: 768px) {
+  .newsletter {
+    flex-direction: column;
+  }
+  .newsletter input,
+  .newsletter button {
+    width: 100%;
+  }
+}

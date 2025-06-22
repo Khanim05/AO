@@ -1,14 +1,38 @@
+/* GLOBAL RESET */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ===================================
+   COMMON STYLES (Light by default)
+=================================== */
+
 .doctor-layout {
   display: flex;
-  min-height: 100vh;
-  background-color: #f9fafb;
+  margin-top: 60px;
+  height: calc(100vh - 90px);
+  width: 100%;
+  overflow: hidden;
 }
 
 .doctor-sidebar {
   width: 220px;
   background-color: #f3f4f6;
   padding: 1.5rem;
+  overflow-y: auto;
   border-right: 1px solid #e5e7eb;
+  margin-top: 20px;
 }
 
 .doctor-sidebar h2 {
@@ -53,26 +77,98 @@
 .doctor-main {
   flex: 1;
   padding: 2rem;
-  overflow-x: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  color: #111827;
 }
 
-/* Mobil uyğunluq */
+/* =========================
+   DARK MODE STYLES
+========================= */
+
+.dark .doctor-sidebar {
+   background-color: #1e1e1e;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+  color: #e0e0e0;
+}
+
+.dark .doctor-sidebar h2 {
+  color: #38bdf8;
+}
+
+.dark .doctor-nav a {
+  color: #cbd5e1;
+}
+
+.dark .doctor-nav a:hover {
+  background-color: #334155;
+  color: white;
+}
+
+.dark .doctor-active-link {
+  background-color: #3b82f6;
+  color: white !important;
+}
+
+.dark .doctor-logout-btn {
+  color: #ef4444;
+}
+
+.dark .doctor-main {
+  background-color: #181818;
+  color: #eaeaea;
+}
+
+/* =====================================
+   RESPONSIVE: Tablet və Mobil Görünüş
+===================================== */
+
+@media (max-width: 1024px) {
+  .doctor-sidebar {
+    width: 180px;
+    padding: 1rem;
+  }
+
+  .doctor-main {
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .doctor-layout {
     flex-direction: column;
   }
 
   .doctor-sidebar {
+    margin-top: 20px;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
     border-right: none;
     border-bottom: 1px solid #ccc;
+    display: block;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .dark .doctor-sidebar {
+    border-bottom-color: #334155;
   }
 
   .doctor-sidebar h2 {
     display: none;
+  }
+
+  .doctor-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .doctor-nav a,
+  .doctor-logout-btn {
+    max-width: 300px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .doctor-main {

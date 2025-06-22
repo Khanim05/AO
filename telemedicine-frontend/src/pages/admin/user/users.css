@@ -95,6 +95,47 @@
   color: #047857;
 }
 
+body.dark .user-page {
+  background-color: #1e1e1e;
+}
+
+body.dark .page-title {
+  color: #f3f4f6;
+}
+
+body.dark .user-card {
+  background: linear-gradient(to top right, #2a2a2a, #1f1f1f);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .user-photo {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px #1e3a8a;
+}
+
+body.dark .user-icon-avatar {
+  background-color: #374151;
+  color: #93c5fd;
+  box-shadow: 0 0 0 4px #1e3a8a;
+}
+
+body.dark .user-info h3 {
+  color: #e5e7eb;
+}
+
+body.dark .user-info p {
+  color: #9ca3af;
+}
+
+body.dark .status-badge.user-status {
+  background-color: #064e3b;
+  color: #34d399;
+}
+
+body.dark .status-badge .check {
+  color: #34d399;
+}
+
 @media (max-width: 1024px) {
   .user-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

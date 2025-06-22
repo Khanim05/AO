@@ -95,6 +95,54 @@
   box-shadow: 0 6px 20px rgba(15, 98, 254, 0.25);
   transition: background 0.3s ease, transform 0.2s ease;
 }
+/* ========================= */
+/*        DARK MODE         */
+/* ========================= */
+body.dark .setting-container {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.03);
+}
+
+/* Başlıq */
+body.dark .setting-container h2 {
+  color: #f1f1f1;
+}
+
+/* Profil şəkli */
+body.dark .profile-img {
+  border: 4px solid #40a9ff;
+  box-shadow: 0 0 25px rgba(64, 169, 255, 0.4);
+}
+
+/* Etiketlər və input qutuları */
+body.dark .input-grid label {
+  background: #2a2a2a;
+  color: #ddd;
+  border-left: 4px solid #40a9ff;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.03);
+}
+
+body.dark .input-grid input {
+  background: #1e1e1e;
+  color: #f1f1f1;
+  box-shadow: inset 0 0 0 1px #444;
+}
+
+body.dark .input-grid input:focus {
+  box-shadow: inset 0 0 0 2px #40a9ff;
+}
+
+/* Submit düyməsi */
+body.dark .setting-form button {
+  background: linear-gradient(to right, #40a9ff, #1e8de2);
+  color: white;
+  box-shadow: 0 6px 20px rgba(64, 169, 255, 0.3);
+}
+
+body.dark .setting-form button:hover {
+  background: linear-gradient(to right, #1e8de2, #40a9ff);
+}
 
 .setting-form button:hover {
   background: linear-gradient(to right, #004db3, #0f62fe);

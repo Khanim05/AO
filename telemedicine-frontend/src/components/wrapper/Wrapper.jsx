@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import "./wrapper.css"
+import "./wrapper.css";
 const Wrapper = () => {
   const { token, user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -12,6 +12,14 @@ const Wrapper = () => {
   const handleClick = (path) => {
     setTargetRoute(path);
     setFadeOut(true);
+  };
+
+  const handleRoute = () => {
+    if (user?.role === "Patient") {
+      handleClick("/profile");
+    } else if (user?.role === "Doctor") {
+      handleClick("/doctor");
+    }
   };
 
   React.useEffect(() => {
@@ -30,18 +38,24 @@ const Wrapper = () => {
       animate={{ opacity: fadeOut ? 0 : 1, scale: fadeOut ? 0.95 : 1 }}
       transition={{ duration: 0.4 }}
     >
-      {token && user?.role === "Patient" ? (
-        <button className="btnLogin" onClick={() => handleClick("/profile")}>
+      {token && (user?.role === "Patient" || user?.role == "Doctor") ? (
+        <button className="btnLogin" onClick={handleRoute}>
           Profil
         </button>
       ) : (
         <>
           {!token && (
             <>
-              <button className="btnLogin" onClick={() => handleClick("/login")}>
+              <button
+                className="btnLogin"
+                onClick={() => handleClick("/login")}
+              >
                 Daxil Ol
               </button>
-              <button className="btnRegister" onClick={() => handleClick("/register")}>
+              <button
+                className="btnRegister"
+                onClick={() => handleClick("/register")}
+              >
                 Qeydiyyat
               </button>
             </>
