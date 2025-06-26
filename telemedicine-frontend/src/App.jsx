@@ -2,12 +2,10 @@ import "./App.css";
 import { Navigate, useRoutes } from "react-router";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/home/Home";
-import Contact from "./pages/contact/Contact";
 import About from "./pages/about/About";
 import Doctor from "./pages/doctor/Doctor";
 import Profile from "./pages/profile/Profile";
 import PrivateRoute from "./routes/PrivateRoute";
-import Blog from "./pages/blog/Blog";
 // App.jsx və ya slider komponentinin içində
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -39,6 +37,8 @@ import MessagesD from "./pages/doctorProfile/messageD/MessagesD";
 import SettingD from "./pages/doctorProfile/settingD/SettingD";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
 import ResetPassword from "./pages/resetPassword/ResetPassword";
+import AdminContactMessages from "./pages/admin/adminContact/AdminContactMessages";
+import AdminReadMessages from "./pages/admin/adminRead/AdminReadMessages";
 
 function App() {
   const dispatch = useDispatch();
@@ -68,9 +68,7 @@ function App() {
       children: [
         { path: "", element: <Home /> },
         { path: "about", element: <About /> },
-        { path: "contact", element: <Contact /> },
         { path: "doctors", element: <Doctor /> },
-        { path: "blog", element: <Blog /> },
         {
           path: "profile",
           element: (
@@ -131,6 +129,8 @@ function App() {
         { path: "pending-doctor", element: <PendingDoctor /> },
         { path: "appointment", element: <Appointment /> },
         { path: "doctor-seans", element: <DoctorSeans /> },
+        {path:"contact-messages", element:<AdminContactMessages/>},
+        {path:"read-messages",element:<AdminReadMessages/>}
       ],
     },
     { path: "*", element: <NotF /> },

@@ -1,59 +1,91 @@
-// src/pages/admin/Dashboard.jsx
-import React from "react";
-// import {
-//   FaUser,
-//   FaStethoscope,
-//   FaCalendarAlt,
-//   FaDollarSign,
-// } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import {
+  FaUser,
+  FaStethoscope,
+  FaCalendarAlt,
+  FaUserTimes,
+} from "react-icons/fa";
+import axios from "axios";
+import "./dashboard.css";
+import UserStatsChart from "../../../components/userchats/UserStatsChart";
 
 const Dashboard = () => {
-  return (
-    <div className="header">
-      <h2>Dashboard</h2>
-    </div>
-    // <>
-    //   <div className="dashboard-header">
-    //     <h2>Dashboard</h2>
-    
-    //     <div className="avatar top-avatar">
-    //       A <span></span>
-    //     </div>
-    //   </div>
+  const [counts, setCounts] = useState({
+    patientCount: 0,
+    doctorCount: 0,
+    unapprovedDoctorCount: 0,
+  });
 
-    //   <div className="stats">
-    //     <div className="stat blue">
-    //       <FaUser />
-    //       <div>
-    //         <h3>120</h3>
-    //         <p>Users</p>
-    //       </div>
-    //     </div>
-    //     <div className="stat green">
-    //       <FaStethoscope />
-    //       <div>
-    //         <h3>30</h3>
-    //         <p>Doctors</p>
-    //       </div>
-    //     </div>
-    //     <div className="stat purple">
-    //       <FaCalendarAlt />
-    //       <div>
-    //         <h3>240</h3>
-    //         <p>Appointments</p>
-    //       </div>
-    //     </div>
-    //     <div className="stat orange">
-    //       <FaDollarSign />
-    //       <div>
-    //         <h3>$5,200</h3>
-    //         <p>Revenue</p>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </>
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          "https://khamiyevbabek-001-site1.ktempurl.com/api/users/role-counts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setCounts(res.data);
+      } catch (err) {
+        console.error("Saylar yüklənmədi:", err);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
+  return (
+    <>
+      <div className="dashboard-header">
+        <h2>Dashboard</h2>
+
+        <div className="avatar top-avatar">
+          A <span></span>
+        </div>
+      </div>
+      <div className="stat-area">
+      <div className="stats">
+        
+        <div className="stat blue">
+          <FaUser />
+          <div>
+            <h3>{counts.patientCount}</h3>
+            <p>İstifadəçilər</p>
+          </div>
+        </div>
+        <div className="stat green">
+          <FaStethoscope />
+          <div>
+            <h3>{counts.doctorCount}</h3>
+            <p>Təsdiqlənmiş Həkimlər</p>
+          </div>
+        </div>
+        <div className="stat orange">
+          <FaUserTimes />
+          <div>
+            <h3>{counts.unapprovedDoctorCount}</h3>
+            <p>Təsdiqlənməmiş Həkimlər</p>
+          </div>
+        </div>
+        {/* <div className="stat purple">
+          <FaCalendarAlt />
+          <div>
+            <h3>$5.2000000000000</h3>
+            <p>Görüşlər</p>
+          </div>
+        </div> */}
+
+        
+      </div>
+      <div className="statsChart">
+        <UserStatsChart/>
+      </div>
+      </div>
+    </>
   );
 };
 
 export default Dashboard;
-

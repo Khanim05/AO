@@ -11,14 +11,14 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [confirmationMsg, setConfirmationMsg] = useState("");
 
-  // ✅ Saat formatlama funksiyası (09:00:00 → 09:00)
+  // ✅ Saat formatlama (məsələn: 09:00)
   const formatHourMinute = (timeStr) => {
     if (!timeStr) return "";
     const [hour, minute] = timeStr.split(":");
     return `${hour}:${minute}`;
   };
 
-  // 1. Fetch available dates
+  // 1. Tarixləri yüklə
   useEffect(() => {
     const fetchDates = async () => {
       try {
@@ -40,17 +40,17 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
     fetchDates();
   }, [doctorId]);
 
-  // 2. Fetch available slots
+  // 2. Seçilmiş günə uyğun boş saatları yüklə
   useEffect(() => {
     const fetchSlots = async () => {
       if (!selectedDate) return;
       try {
         const res = await axios.get(
-          `https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/available-slots`,
+          "https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/available-slots",
           {
             params: {
               doctorId,
-              date: selectedDate.toISOString(),
+              date: selectedDate.toISOString().split("T")[0], // ✅ düz tarixi göndər
             },
           }
         );
@@ -70,7 +70,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
     fetchSlots();
   }, [selectedDate, doctorId]);
 
-  // 3. Book appointment
+  // 3. Görüş təyin et
   const handleBook = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -80,7 +80,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
       }
 
       await axios.post(
-        `https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/book`,
+        "https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/book",
         {
           doctorId,
           scheduleId: selectedSlot.scheduleId,
@@ -99,7 +99,6 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
       const year = dateObj.getFullYear();
 
       const formattedDate = `${day}.${month}.${year}`;
-
       const slotStart = formatHourMinute(selectedSlot.time);
       const slotEnd = formatHourMinute(selectedSlot.end);
 
@@ -115,22 +114,12 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-btn" onClick={onClose}>
-          ✖
-        </button>
+        <button className="close-btn" onClick={onClose}>✖</button>
 
         {!confirmationMsg && (
           <>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}
-            >
-              <label htmlFor="datepicker" style={{ fontWeight: 600 }}>
-                Tarixi seçin:
-              </label>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <label htmlFor="datepicker" style={{ fontWeight: 600 }}>Tarixi seçin:</label>
               <DatePicker
                 id="datepicker"
                 selected={selectedDate}
@@ -156,11 +145,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
               {availableSlots.map((slot, i) => (
                 <button
                   key={i}
-                  className={`slot-btn ${
-                    selectedSlot?.scheduleId === slot.scheduleId
-                      ? "selected"
-                      : ""
-                  }`}
+                  className={`slot-btn ${selectedSlot?.scheduleId === slot.scheduleId ? "selected" : ""}`}
                   onClick={() => setSelectedSlot(slot)}
                 >
                   {formatHourMinute(slot.time)} - {formatHourMinute(slot.end)}
@@ -170,9 +155,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
 
             {selectedSlot && (
               <div className="confirm-wrapper">
-                <button className="confirm-btn" onClick={handleBook}>
-                  Təsdiqlə
-                </button>
+                <button className="confirm-btn" onClick={handleBook}>Təsdiqlə</button>
               </div>
             )}
           </>
@@ -181,9 +164,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
         {confirmationMsg && (
           <div className="confirmation-message">
             <p>{confirmationMsg}</p>
-            <button className="confirm-btn" onClick={onClose}>
-              Bağla
-            </button>
+            <button className="confirm-btn" onClick={onClose}>Bağla</button>
           </div>
         )}
       </div>

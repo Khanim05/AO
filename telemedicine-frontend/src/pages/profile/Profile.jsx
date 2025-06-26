@@ -9,6 +9,7 @@ import {
   FaCog,
 } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
+import Footer from "../../components/footer/Footer";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -65,7 +66,11 @@ const Profile = () => {
       </aside>
 
       <main className="profile-main">
-        <Outlet />
+        <div className="profile-content">
+          <Outlet />
+        </div>
+        <Footer/>
+        
       </main>
     </div>
   );

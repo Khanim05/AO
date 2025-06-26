@@ -5,6 +5,7 @@ import "./doctorProfile.css";
 
 const DoctorProfile = () => {
   const [doctor, setDoctor] = useState(null);
+
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
@@ -16,9 +17,7 @@ const DoctorProfile = () => {
           decoded[
             "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
-        console.log("🔑 userId:", userId);
 
-        // 1. Approved olanları gətir
         const approvedRes = await axios.get(
           "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorProfile/approved",
           {
@@ -26,9 +25,7 @@ const DoctorProfile = () => {
           }
         );
 
-        // 2. Token userId ilə uyğun olan profili tap
         const foundProfile = approvedRes.data.find((p) => p.userId === userId);
-
         if (!foundProfile) {
           console.warn("Profil tapılmadı!");
           return;
@@ -36,7 +33,6 @@ const DoctorProfile = () => {
 
         const profileId = foundProfile.id;
 
-        // 3. Bu id ilə əsas profil məlumatını çək
         const res = await axios.get(
           `https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorProfile/${profileId}`,
           {
@@ -53,15 +49,49 @@ const DoctorProfile = () => {
     fetchDoctor();
   }, []);
 
+  const formatDateOnly = (dateInput) => {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return ""; // tarix səhvdirsə boş string ver
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
+  const formatDateTime = (dateInput) => {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return "";
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
+  };
+
   if (!doctor) {
     return <div className="doctor-loading">Yüklənir...</div>;
   }
+  const birthDateFormatted = doctor.birthDate
+    ? formatDateOnly(doctor.birthDate)
+    : "";
+
+  const createdAtFormatted = doctor.createProfil
+    ? formatDateTime(doctor.createProfil)
+    : "";
 
   return (
     <div className="doctor-profile-container">
       <div className="profile-header">
         <img
-          src={doctor.imgUrl || "/default-avatar.png"}
+          src={
+            doctor.imgUrl
+              ? `${doctor.imgUrl}?v=${new Date().getTime()}`
+              : "/default-avatar.png"
+          }
           alt="doctor"
           className="profile-img"
         />
@@ -85,11 +115,12 @@ const DoctorProfile = () => {
         </div>
         <div className="profile-card">
           <span className="label">Doğum tarixi:</span>
-          <span>{new Date(doctor.birthDate).toLocaleDateString()}</span>
+          <span>{birthDateFormatted}</span>
         </div>
+
         <div className="profile-card">
           <span className="label">Profil yaradılma:</span>
-          <span>{new Date(doctor.createProfil).toLocaleString()}</span>
+          <span>{createdAtFormatted}</span>
         </div>
       </div>
     </div>

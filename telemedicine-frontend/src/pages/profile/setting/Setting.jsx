@@ -45,14 +45,15 @@ const Setting = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const handleImageUpload = async (e) => {
+    const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    console.log("📦 Fayl seçildi:", file); // 🔍 1
+
     const formDataCloud = new FormData();
     formDataCloud.append("file", file);
-    formDataCloud.append("upload_preset", "your_upload_preset"); // dəyiş
-    formDataCloud.append("cloud_name", "dpa4msrgz");
+    formDataCloud.append("upload_preset", "telemedicine_preset");
 
     try {
       const res = await axios.post(
@@ -60,20 +61,22 @@ const Setting = () => {
         formDataCloud
       );
 
+      console.log("✅ Yükləmə nəticəsi:", res.data); // 🔍 2
+
       const fullUrl = res.data.secure_url;
-      const shortPath = fullUrl.slice(fullUrl.indexOf("telemedicine"));
 
       setFormData((prev) => ({
         ...prev,
-        imgUrl: shortPath,
+        imgUrl: fullUrl,
       }));
 
-      toast.success("Qısa yol ilə şəkil yükləndi ✅");
+      toast.success("Şəkil uğurla yükləndi ✅");
     } catch (err) {
-      toast.error("Yükləmə alınmadı ❌");
-      console.error("Upload error:", err);
+      toast.error("Yükləmə zamanı xəta baş verdi ❌");
+      console.error("❌ Upload error:", err); // 🔍 3
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

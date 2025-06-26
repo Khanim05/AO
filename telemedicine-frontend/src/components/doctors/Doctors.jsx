@@ -14,12 +14,16 @@ const Doctors = () => {
       .then((res) => setDoctors(res.data))
       .catch((err) => console.error(err));
   }, []);
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 600,
     slidesToShow: 3,
     slidesToScroll: 1,
+    autoplay: true, // ✅ avtomatik hərəkət
+    autoplaySpeed: 3000, // ✅ hər 3 saniyədə bir
+    cssEase: "linear", // ✅ daha yumşaq sürüşmə üçün
     responsive: [
       { breakpoint: 992, settings: { slidesToShow: 2 } },
       { breakpoint: 768, settings: { slidesToShow: 1 } },

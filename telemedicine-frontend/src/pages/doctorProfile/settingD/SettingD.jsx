@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { jwtDecode } from "jwt-decode";
 import "../../profile/setting/setting.css";
+import DatePicker from "react-datepicker";
 
 const SettingD = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ const SettingD = () => {
   });
   const [loading, setLoading] = useState(true);
   const [doctorId, setDoctorId] = useState(null);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchDoctorProfile = async () => {
@@ -28,10 +29,10 @@ const SettingD = () => {
             "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
-        const catRes = await axios.get(
-          "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorCategory/all"
-        );
-        setCategories(catRes.data);
+        // const catRes = await axios.get(
+        //   "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorCategory/all"
+        // );
+        // setCategories(catRes.data);
 
         const approvedRes = await axios.get(
           "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorProfile/approved",
@@ -81,10 +82,11 @@ const SettingD = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    console.log("📦 Fayl seçildi:", file); // 🔍 1
+
     const formDataCloud = new FormData();
     formDataCloud.append("file", file);
-    formDataCloud.append("upload_preset", "your_upload_preset");
-    formDataCloud.append("cloud_name", "dpa4msrgz");
+    formDataCloud.append("upload_preset", "telemedicine_preset");
 
     try {
       const res = await axios.post(
@@ -92,25 +94,26 @@ const SettingD = () => {
         formDataCloud
       );
 
+      console.log("✅ Yükləmə nəticəsi:", res.data); // 🔍 2
+
       const fullUrl = res.data.secure_url;
-      const shortPath = fullUrl.slice(fullUrl.indexOf("telemedicine"));
 
       setFormData((prev) => ({
         ...prev,
-        imgUrl: shortPath,
+        imgUrl: fullUrl,
       }));
 
       toast.success("Şəkil uğurla yükləndi ✅");
     } catch (err) {
       toast.error("Yükləmə zamanı xəta baş verdi ❌");
-      console.error("Upload error:", err);
+      console.error("❌ Upload error:", err); // 🔍 3
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!doctorId) return toast.error("Həkim ID tapılmadı");
-
+    console.log(formData);
     try {
       const token = localStorage.getItem("token");
       await axios.put(
@@ -177,7 +180,7 @@ const SettingD = () => {
             <input type="email" value={formData.email} disabled />
           </label>
 
-          <label>
+          {/* <label>
             Seans növü:
             <select
               name="categoryId"
@@ -191,15 +194,22 @@ const SettingD = () => {
                 </option>
               ))}
             </select>
-          </label>
+          </label> */}
 
           <label>
             Doğum tarixi:
-            <input
-              type="date"
-              name="birthDate"
-              value={formData.birthDate?.split("T")[0] || ""}
-              onChange={handleChange}
+            <DatePicker
+              selected={
+                formData.birthDate ? new Date(formData.birthDate) : null
+              }
+              onChange={(date) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  birthDate: date.toISOString(),
+                }))
+              }
+              dateFormat="dd.MM.yyyy"
+              placeholderText="Tarix seçin"
             />
           </label>
         </div>

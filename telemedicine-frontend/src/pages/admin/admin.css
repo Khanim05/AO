@@ -174,3 +174,127 @@
   pointer-events: auto;
 }
 
+/* 📩 Əlaqə Mesajları Dropdown - Strukturuna uyğun */
+.admin-dropdown {
+  margin-bottom: 1rem;
+}
+
+.admin-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: #f3f4f6;
+  transition: background 0.2s, color 0.2s;
+  color: #333;
+}
+
+.admin-dropdown-header:hover {
+  background-color: #e6f0ff;
+  color: #0f62fe;
+}
+
+.dark .admin-dropdown-header {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.dark .admin-dropdown-header:hover {
+  background-color: #3a3a3a;
+  color: #0fbcf9;
+}
+
+.admin-dropdown-body {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: all 0.4s ease;
+  margin-left: 0.5rem;
+  margin-top: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.admin-dropdown-body.open {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.admin-sublink {
+  font-size: 14px;
+  padding: 0.4rem 0.8rem;
+  margin-left: 0.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.admin-sublink:hover {
+  background-color: #e6f0ff;
+  color: #0f62fe;
+}
+
+.admin-sublink.active {
+  background-color: #0f62fe;
+  color: white !important;
+}
+
+.dark .admin-sublink {
+  color: #e0e0e0;
+}
+
+.dark .admin-sublink:hover {
+  background-color: #3a3a3a;
+  color: #0fbcf9;
+}
+
+.dark .admin-sublink.active {
+  background-color: #0f62fe;
+  color: white !important;
+}
+@media screen and (max-width: 762px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+  }
+
+  .dark .admin-sidebar {
+    border-bottom: 1px solid #444;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-2 {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+}
+
+

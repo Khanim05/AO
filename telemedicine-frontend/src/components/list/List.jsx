@@ -1,6 +1,20 @@
 import "./list.css";
-import { Link, NavLink } from "react-router-dom";
-const List = () => {
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+
+const List = ({ scrollToContact }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleContactClick = (e) => {
+    e.preventDefault();
+
+    if (location.pathname === "/") {
+      scrollToContact(); // Ana səhifədədirsə, scroll et
+    } else {
+      navigate("/#contact"); // Başqa səhifədədirsə, yönləndir
+    }
+  };
+
   return (
     <div id="list-area">
       <ul className="list-area">
@@ -8,7 +22,9 @@ const List = () => {
           <NavLink
             to="/"
             className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
+              isActive && location.hash !== "#contact"
+                ? "nav-link active"
+                : "nav-link"
             }
           >
             Ana Səhifə
@@ -35,24 +51,17 @@ const List = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink
-            to="blog"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            Bloq
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
+          <a
+            href="#contact"
+            onClick={handleContactClick}
+            className={`nav-link ${
+              location.hash === "#contact" && location.pathname === "/"
+                ? "active"
+                : ""
+            }`}
           >
             Əlaqə
-          </NavLink>
+          </a>
         </li>
       </ul>
     </div>

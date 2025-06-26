@@ -85,3 +85,49 @@
 .icon:hover{
     color: #1d5385;
 }
+
+body.dark .mobile-sidebar {
+  background-color: #1e1e1e;
+  color: #e5e5e5;
+}
+
+body.dark .sidebar-links a {
+  color: #e5e5e5;
+}
+
+body.dark .sidebar-links a:hover {
+  color: #33ADAB;
+}
+
+body.dark .btnLogin {
+  background-color: #2563eb;
+}
+
+body.dark .btnRegister {
+  background-color: #33ADAB;
+}
+
+body.dark .sidebar-contact p {
+  color: #d1d5db;
+}
+
+body.dark .sidebar-social a {
+  color: #d1d5db;
+}
+
+body.dark .sidebar-social a:hover {
+  color: #33ADAB;
+}
+
+body.dark .icon {
+  color: #d1d5db;
+}
+
+body.dark .icon:hover {
+  color: #33ADAB;
+}
+
+body.dark .close-btn {
+  color: #d1d5db;
+}
+

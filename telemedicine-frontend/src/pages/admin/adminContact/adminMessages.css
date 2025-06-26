@@ -1,0 +1,114 @@
+.admin-contact-messages {
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-contact-messages h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.message-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.message-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.message-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.message-card p {
+  margin: 6px 0;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.message-card .timestamp {
+  font-style: italic;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* === DARK MODE === */
+body.dark .admin-contact-messages {
+  background: linear-gradient(to top right, #2a2a2a, #1f1f1f);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .admin-contact-messages h2 {
+  color: #f9fafb;
+}
+
+body.dark .message-card {
+  background: linear-gradient(to top right, #2a2a2a, #1f1f1f);
+  border: 1px solid #374151;
+  box-shadow: none;
+}
+
+body.dark .message-card p {
+  color: #e5e7eb;
+}
+
+body.dark .message-card .timestamp {
+  color: #9ca3af;
+}
+.read-button {
+  margin-top: 10px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.read-button:hover {
+  background-color: #1e40af;
+}
+
+body.dark .read-button {
+  background-color: #3b82f6;
+}
+
+body.dark .read-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .admin-contact-messages {
+    padding: 20px;
+  }
+
+  .admin-contact-messages h2 {
+    font-size: 20px;
+  }
+
+  .message-card {
+    padding: 16px;
+  }
+
+  .message-card p {
+    font-size: 13px;
+  }
+
+  .message-card .timestamp {
+    font-size: 12px;
+  }
+}

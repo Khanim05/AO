@@ -42,11 +42,6 @@ const MobileSidebar = ({ closeSidebar }) => {
           </Link>
         </li>
         <li>
-          <Link to="/blog" onClick={closeSidebar}>
-            Bloq
-          </Link>
-        </li>
-        <li>
           <Link to="/contact" onClick={closeSidebar}>
             Əlaqə
           </Link>

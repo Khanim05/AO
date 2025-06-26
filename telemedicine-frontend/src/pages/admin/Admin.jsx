@@ -5,12 +5,11 @@ import { logout } from "../../redux/slice/authSlice";
 import {
   FaUser,
   FaStethoscope,
-  FaCalendarAlt,
-  FaCog,
   FaSignOutAlt,
   FaChevronDown,
   FaChevronUp,
   FaTachometerAlt,
+  FaEnvelopeOpenText,
 } from "react-icons/fa";
 import "./admin.css";
 import DarkMode from "../../components/darkMode/DarkMode";
@@ -19,7 +18,9 @@ const Admin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [doctorDropdown, setDoctorDropdown] = useState(false);
+  const [contactDropdown, setContactDropdown] = useState(false); // ✅ Əlaqə dropdownu
 
   const handleLogout = () => {
     dispatch(logout());
@@ -41,10 +42,12 @@ const Admin = () => {
           <NavLink to="/admin/dashboard" className="admin-link">
             <FaTachometerAlt /> Dashboard
           </NavLink>
+
           <NavLink to="/admin/users" className="admin-link">
             <FaUser /> Users
           </NavLink>
 
+          {/* 🩺 Doctors Dropdown */}
           <div className="admin-dropdown">
             <div
               className="admin-dropdown-header"
@@ -68,6 +71,33 @@ const Admin = () => {
                   </NavLink>
                   <NavLink to="/admin/doctor-seans" className="admin-sublink">
                     Seans Növü
+                  </NavLink>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* 📩 Contact Messages Dropdown */}
+          <div className="admin-dropdown">
+            <div
+              className="admin-dropdown-header"
+              onClick={() => setContactDropdown(!contactDropdown)}
+            >
+              <span>
+                <FaEnvelopeOpenText /> Əlaqə Mesajları
+              </span>
+              {contactDropdown ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+            <div
+              className={`admin-dropdown-body ${contactDropdown ? "open" : ""}`}
+            >
+              {contactDropdown && (
+                <>
+                  <NavLink to="/admin/contact-messages" className="admin-sublink">
+                    Oxunmamış
+                  </NavLink>
+                  <NavLink to="/admin/read-messages" className="admin-sublink">
+                    Oxunmuş
                   </NavLink>
                 </>
               )}

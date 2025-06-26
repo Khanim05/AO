@@ -2,6 +2,7 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/slice/authSlice";
 import "./doctorProfile.css";
+import Footer from "../../components/footer/Footer";
 
 const DoctorProfile = () => {
   const dispatch = useDispatch();
@@ -52,7 +53,10 @@ const DoctorProfile = () => {
 
       {/* Content */}
       <main className="doctor-main">
-        <Outlet />
+        <div className="doctor-content">
+          <Outlet />
+        </div>
+        <Footer/>
       </main>
     </div>
   );

@@ -45,6 +45,16 @@ const PendingDoctors = () => {
     }
   };
 
+    const formatDateTime = (dateStr) => {
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+
+    return `${day}.${month}.${year}`;
+  };
+  
   return (
     <div className="pending-doctor-page">
       <ToastContainer />
@@ -88,15 +98,16 @@ const PendingDoctors = () => {
               </div>
               <div className="doctor-meta">{doc.categoryName}</div>
               <div className="doctor-meta">
-                <strong>Lisenziya:</strong> {doc.licenseNumber}
+                <strong>Təcrübə ili:</strong> {doc.licenseNumber}
               </div>
               <div className="doctor-meta">
                 <strong>Doğum:</strong>{" "}
-                {new Date(doc.birthDate).toLocaleDateString()}
+                {formatDateTime(doc.birthDate)}
               </div>
               <div className="doctor-meta">
-                <strong>Qeydiyyat:</strong>{" "}
-                {new Date(doc.createProfil).toLocaleDateString()}
+                <strong>
+                  Qeydiyyat:</strong>{" "}
+                {formatDateTime(doc.createProfil)}
               </div>
               <span className="status-badge waiting">⏳ Təsdiq Gözləyir</span>
             </div>
