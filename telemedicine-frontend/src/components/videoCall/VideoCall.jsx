@@ -1,3 +1,4 @@
+// ✅ VideoCall.jsx (tam frontend versiya) - Qarşılıqlı görütü qura bilən
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import Peer from "simple-peer";
@@ -29,20 +30,27 @@ const VideoCall = () => {
           connection.invoke("JoinRoom", roomId);
         });
 
+        // 1. Otaqdaki digər userlər göndərilir (ilk daxil olana)
+        connection.on("AllUsers", (users) => {
+          if (users.length > 0) {
+            const peer = createPeer(users[0], connection.connectionId, currentStream);
+            peerRef.current = peer;
+          }
+        });
+
+        // 2. Sonradan biri otağa daxil olarsa
         connection.on("UserJoined", (userId) => {
-          const peer = createPeer(
-            userId,
-            connection.connectionId,
-            currentStream
-          );
+          const peer = createPeer(userId, connection.connectionId, currentStream);
           peerRef.current = peer;
         });
 
+        // 3. Qarşı tərəfdən signal gəlirsə
         connection.on("ReceiveSignal", ({ callerId, signal }) => {
           const peer = addPeer(signal, callerId, currentStream);
           peerRef.current = peer;
         });
 
+        // 4. Qarşı tərəfə cavab siqnalı göndər
         connection.on("ReturnSignal", ({ signal }) => {
           peerRef.current?.signal(signal);
         });
@@ -99,6 +107,7 @@ const VideoCall = () => {
         gap: "20px",
         justifyContent: "center",
         marginTop: "40px",
+        flexWrap: "wrap",
       }}
     >
       <div>
