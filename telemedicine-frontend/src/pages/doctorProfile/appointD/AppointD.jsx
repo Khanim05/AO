@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./appointD.css";
+import { ToastContainer, toast } from 'react-toastify';
 
 const AppointD = () => {
   const [appointments, setAppointments] = useState([]);
@@ -25,6 +26,12 @@ const AppointD = () => {
 
     fetchDoctorAppointments();
   }, []);
+
+  const now = new Date();
+  const upcomingAppointments = appointments.filter(
+    (item) => new Date(item.endTime) > now
+  );
+
   const formatDateTime = (dateStr) => {
     const date = new Date(dateStr);
     const day = String(date.getDate()).padStart(2, "0");
@@ -58,7 +65,7 @@ const AppointD = () => {
       );
 
       if (!canJoinRes.data) {
-        alert("Hələ görüş vaxtı çatmayıb və ya artıq keçib.");
+        toast.info("Hələ görüş vaxtı çatmayıb.");
         return;
       }
 
@@ -89,11 +96,11 @@ const AppointD = () => {
         <div className="appointment-section">
           <h3 className="section-title">Görüşlər</h3>
 
-          {appointments.length === 0 ? (
-            <p className="no-appointments">Görüş tapılmadı.</p>
+          {upcomingAppointments.length === 0 ? (
+            <p className="no-appointments">Yaxın gələcəkdə görüş tapılmadı.</p>
           ) : (
             <ul className="appointments-list">
-              {appointments.map((item) => (
+              {upcomingAppointments.map((item) => (
                 <li className="appointment-card" key={item.id}>
                   <div className="appointment-info">
                     <img
@@ -117,12 +124,10 @@ const AppointD = () => {
                         ? formatDate(item.patient.birthDate)
                         : "—"}
                     </p>
-
                     <p>
                       <strong>Başlama vaxtı:</strong>{" "}
                       {formatDateTime(item.startTime)}
                     </p>
-
                     <p>
                       <strong>Bitmə vaxtı:</strong>{" "}
                       {formatDateTime(item.endTime)}
@@ -140,6 +145,7 @@ const AppointD = () => {
           )}
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };

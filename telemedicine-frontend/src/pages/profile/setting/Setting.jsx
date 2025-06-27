@@ -9,8 +9,9 @@ const Setting = () => {
     name: "",
     surname: "",
     birthDate: "",
-    imgUrl: "",
     email: "",
+    imgUrl: "", // Preview üçün
+    profileImageFile: null, // Backend üçün fayl
   });
 
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,14 @@ const Setting = () => {
             },
           }
         );
-        setFormData(res.data);
+        setFormData((prev) => ({
+          ...prev,
+          name: res.data.name,
+          surname: res.data.surname,
+          birthDate: res.data.birthDate,
+          email: res.data.email,
+          imgUrl: res.data.imgUrl,
+        }));
       } catch (error) {
         toast.error("Profil məlumatları yüklənə bilmədi.");
         console.log(error);
@@ -45,60 +53,62 @@ const Setting = () => {
       [e.target.name]: e.target.value,
     }));
   };
-    const handleImageUpload = async (e) => {
+
+  const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    console.log("📦 Fayl seçildi:", file); // 🔍 1
-
-    const formDataCloud = new FormData();
-    formDataCloud.append("file", file);
-    formDataCloud.append("upload_preset", "telemedicine_preset");
-
-    try {
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dpa4msrgz/image/upload",
-        formDataCloud
-      );
-
-      console.log("✅ Yükləmə nəticəsi:", res.data); // 🔍 2
-
-      const fullUrl = res.data.secure_url;
-
-      setFormData((prev) => ({
-        ...prev,
-        imgUrl: fullUrl,
-      }));
-
-      toast.success("Şəkil uğurla yükləndi ✅");
-    } catch (err) {
-      toast.error("Yükləmə zamanı xəta baş verdi ❌");
-      console.error("❌ Upload error:", err); // 🔍 3
-    }
+    setFormData((prev) => ({
+      ...prev,
+      imgUrl: URL.createObjectURL(file), // preview
+      profileImageFile: file, // backend üçün göndəriləcək fayl
+    }));
   };
-
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        "https://khamiyevbabek-001-site1.ktempurl.com/api/users/profile",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      toast.success("Profil məlumatları uğurla yeniləndi.");
-    } catch (err) {
-      if (err.response?.data?.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error("Yeniləmə zamanı xəta baş verdi.");
+  const token = localStorage.getItem("token");
+  const form = new FormData();
+
+  form.append("Name", formData.name);
+  form.append("Surname", formData.surname);
+  form.append("BirthDate", formData.birthDate); // format: YYYY-MM-DD
+
+  if (formData.profileImageFile) {
+    form.append("ProfileImage", formData.profileImageFile);
+  }
+
+   for (let [key, value] of form.entries()) {
+    console.log(`${key}:`, value);
+  }
+
+  try {
+    const res = await axios.put(
+      "https://khamiyevbabek-001-site1.ktempurl.com/api/users/profile",
+      form,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       }
-    }
-  };
+    );
+
+    toast.success("Profil məlumatları uğurla yeniləndi.");
+  } 
+   catch (err) {
+  if (err.response?.status === 204 || err.response?.status === 200) {
+    toast.success("Profil məlumatları uğurla yeniləndi.");
+  } else if (err.response?.data?.message) {
+    toast.error(err.response.data.message);
+  } else {
+    toast.error("Yeniləmə zamanı xəta baş verdi.");
+  }
+}
+
+};
+
 
   if (loading) return <p>Yüklənir...</p>;
 
@@ -107,7 +117,6 @@ const Setting = () => {
       <ToastContainer />
       <h2>Profil Məlumatlarını Dəyiş</h2>
       <form onSubmit={handleSubmit} className="setting-form beautified-form">
-        {/* Şəkil + Ad Soyad yuxarıda */}
         <div className="profile-section">
           <label htmlFor="profileImage" className="image-upload-wrapper">
             <img
@@ -125,7 +134,6 @@ const Setting = () => {
           </label>
         </div>
 
-        {/* Aşağıdakı input sahələri */}
         <div className="input-grid">
           <label>
             Ad:

@@ -1,4 +1,3 @@
-// ✅ VideoCall.jsx (tam frontend versiya) - Qarşılıqlı görütü qura bilən
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import Peer from "simple-peer";
@@ -7,8 +6,7 @@ import { createVideoSignalConnection } from "../../sockets/videoSignal";
 const VideoCall = () => {
   const { roomId } = useParams();
   const [stream, setStream] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
-  const peerRef = useRef(null);
+  const peerRef = useRef({});
   const userVideo = useRef();
   const partnerVideo = useRef();
   const connectionRef = useRef(null);
@@ -24,40 +22,54 @@ const VideoCall = () => {
       .getUserMedia({ video: true, audio: true })
       .then((currentStream) => {
         setStream(currentStream);
-        if (userVideo.current) userVideo.current.srcObject = currentStream;
+        if (userVideo.current) {
+          userVideo.current.srcObject = currentStream;
+        }
 
         connection.start().then(() => {
           connection.invoke("JoinRoom", roomId);
         });
 
-        // 1. Otaqdaki digər userlər göndərilir (ilk daxil olana)
+        // ✅ Qarşı tərəflər otaqdadırsa
         connection.on("AllUsers", (users) => {
-          if (users.length > 0) {
-            const peer = createPeer(users[0], connection.connectionId, currentStream);
-            peerRef.current = peer;
-          }
+          console.log("💡 AllUsers gəldi:", users);
+          users.forEach((userId) => {
+            const peer = createPeer(
+              userId,
+              connection.connectionId,
+              currentStream
+            );
+            peerRef.current[userId] = peer;
+          });
         });
 
-        // 2. Sonradan biri otağa daxil olarsa
+        // ✅ Yeni qoşulan biri varsa
         connection.on("UserJoined", (userId) => {
-          const peer = createPeer(userId, connection.connectionId, currentStream);
-          peerRef.current = peer;
+          console.log("➕ Yeni qoşulan:", userId);
+          const peer = createPeer(
+            userId,
+            connection.connectionId,
+            currentStream
+          );
+          peerRef.current[userId] = peer;
         });
 
-        // 3. Qarşı tərəfdən signal gəlirsə
-        connection.on("ReceiveSignal", ({ callerId, signal }) => {
-          const peer = addPeer(signal, callerId, currentStream);
-          peerRef.current = peer;
+        // ✅ Qarşı tərəfdən siqnal alındı
+        connection.on("ReceiveOffer", (fromUserId, sdp) => {
+          console.log("📡 Siqnal gəldi:", fromUserId);
+          const peer = addPeer(JSON.parse(sdp), fromUserId, currentStream);
+          peerRef.current[fromUserId] = peer;
         });
 
-        // 4. Qarşı tərəfə cavab siqnalı göndər
-        connection.on("ReturnSignal", ({ signal }) => {
-          peerRef.current?.signal(signal);
+        // ✅ Qarşı tərəfə cavab göndər
+        connection.on("ReceiveAnswer", (fromUserId, sdp) => {
+          console.log("📩 Geri siqnal gəldi:", fromUserId);
+          peerRef.current[fromUserId]?.signal(JSON.parse(sdp));
         });
       });
 
     return () => {
-      if (peerRef.current) peerRef.current.destroy();
+      Object.values(peerRef.current).forEach((peer) => peer.destroy());
       connectionRef.current?.stop();
     };
   }, [roomId]);
@@ -66,15 +78,17 @@ const VideoCall = () => {
     const peer = new Peer({ initiator: true, trickle: false, stream });
 
     peer.on("signal", (signal) => {
-      connectionRef.current?.invoke("SendSignal", {
-        signal,
-        targetUserId: userToSignal,
-      });
+      connectionRef.current?.invoke(
+        "SendOffer",
+        userToSignal,
+        JSON.stringify(signal)
+      );
     });
 
     peer.on("stream", (remoteStream) => {
-      setRemoteStream(remoteStream);
-      if (partnerVideo.current) partnerVideo.current.srcObject = remoteStream;
+      if (partnerVideo.current) {
+        partnerVideo.current.srcObject = remoteStream;
+      }
     });
 
     return peer;
@@ -84,15 +98,17 @@ const VideoCall = () => {
     const peer = new Peer({ initiator: false, trickle: false, stream });
 
     peer.on("signal", (signal) => {
-      connectionRef.current?.invoke("ReturnSignal", {
-        signal,
-        callerId: callerID,
-      });
+      connectionRef.current?.invoke(
+        "SendAnswer",
+        callerID,
+        JSON.stringify(signal)
+      );
     });
 
     peer.on("stream", (remoteStream) => {
-      setRemoteStream(remoteStream);
-      if (partnerVideo.current) partnerVideo.current.srcObject = remoteStream;
+      if (partnerVideo.current) {
+        partnerVideo.current.srcObject = remoteStream;
+      }
     });
 
     peer.signal(incomingSignal);

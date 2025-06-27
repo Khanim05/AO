@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./appointmentModal.css";
 import axios from "axios";
-
+import { ToastContainer, toast } from 'react-toastify';
 const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -75,7 +75,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        alert("Zəhmət olmasa daxil olun.");
+        toast.info("Zəhmət olmasa daxil olun.")
         return;
       }
 
@@ -107,7 +107,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
       );
     } catch (error) {
       console.error("Görüş təyin edilərkən xəta:", error);
-      alert("Görüş təyin edilə bilmədi.");
+      toast.error("Görüş təyin edilə bilmədi.")
     }
   };
 
@@ -168,6 +168,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
           </div>
         )}
       </div>
+      <ToastContainer/>
     </div>
   );
 };
