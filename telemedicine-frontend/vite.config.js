@@ -1,8 +1,20 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    global: {},
+    'process.env': {},
+  },
+  resolve: {
+    alias: {
+      util: 'util/',
+      stream: 'stream-browserify',
+      events: 'events/',
+    },
+  },
   server: {
     proxy: {
       '/api': {
@@ -15,7 +27,7 @@ export default defineConfig({
         ws: true,
         changeOrigin: true,
         secure: false,
-      }
-    }
-  }
+      },
+    },
+  },
 });

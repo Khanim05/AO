@@ -55,6 +55,50 @@ const AppointP = () => {
     }
   };
 
+  const handleJoinMeeting = async (appointmentId) => {
+    console.log("🧪 JOIN düyməsi klikləndi");
+    console.log("📌 Appointment ID:", appointmentId);
+    const token = localStorage.getItem("token");
+    console.log("🔐 Token:", token);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      // const canJoinRes = await axios.get(
+      //   `/api/Meeting/canjoin/${appointmentId}`,
+      //   {
+      //     headers: { Authorization: `Bearer ${token}` },
+      //   }
+      // );
+
+      // BURA YENİ QOŞ — test üçün:
+      const canJoinRes = { data: true }; // <=== YALNIZ TEST ÜÇÜN!
+
+      if (!canJoinRes.data) {
+        alert("Hələ görüş vaxtı çatmayıb və ya artıq keçib.");
+        return;
+      }
+
+      const startRes = await axios.post(
+        `/api/Meeting/start/${appointmentId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const roomId = startRes.data;
+      if (roomId) {
+        window.location.href = `/video-call/${roomId}`;
+      } else {
+        alert("Otaq ID alına bilmədi.");
+      }
+    } catch (err) {
+      console.error("Zəngə qoşulma zamanı xəta:", err);
+      alert("Zəngə qoşulmaq mümkün olmadı.");
+    }
+  };
+
   const formatDateTime = (dateStr) => {
     const date = new Date(dateStr);
     const day = String(date.getDate()).padStart(2, "0");
@@ -100,8 +144,13 @@ const AppointP = () => {
                 <li key={appt.id} className="appointment-card active">
                   <div className="appointment-info">
                     <h4>{appt.doctorName}</h4>
-                    <p><strong>Başlanğıc:</strong> {formatDateTime(appt.startTime)}</p>
-                    <p><strong>Son:</strong> {formatDateTime(appt.endTime)}</p>
+                    <p>
+                      <strong>Başlanğıc:</strong>{" "}
+                      {formatDateTime(appt.startTime)}
+                    </p>
+                    <p>
+                      <strong>Son:</strong> {formatDateTime(appt.endTime)}
+                    </p>
                     <p>
                       <span className={`status-badge status-${appt.status}`}>
                         {statusMap[appt.status]}
@@ -109,7 +158,13 @@ const AppointP = () => {
                     </p>
                   </div>
                   <div className="appointment-actions">
-                    <button className="join-btn">Zəngə qoşul</button>
+                    <button
+                      className="join-btn"
+                      onClick={() => handleJoinMeeting(appt.id)}
+                    >
+                      Zəngə qoşul
+                    </button>
+
                     <button
                       className="cancel-btn"
                       onClick={() => cancelAppointment(appt.id)}
@@ -134,8 +189,13 @@ const AppointP = () => {
                 <li key={appt.id} className="appointment-card past">
                   <div className="appointment-info">
                     <h4>{appt.doctorName}</h4>
-                    <p><strong>Başlanğıc:</strong> {formatDateTime(appt.startTime)}</p>
-                    <p><strong>Son:</strong> {formatDateTime(appt.endTime)}</p>
+                    <p>
+                      <strong>Başlanğıc:</strong>{" "}
+                      {formatDateTime(appt.startTime)}
+                    </p>
+                    <p>
+                      <strong>Son:</strong> {formatDateTime(appt.endTime)}
+                    </p>
                     <p>
                       <span className={`status-badge status-${appt.status}`}>
                         {statusMap[appt.status]}

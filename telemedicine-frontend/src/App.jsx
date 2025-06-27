@@ -39,6 +39,7 @@ import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
 import ResetPassword from "./pages/resetPassword/ResetPassword";
 import AdminContactMessages from "./pages/admin/adminContact/AdminContactMessages";
 import AdminReadMessages from "./pages/admin/adminRead/AdminReadMessages";
+import VideoCallPage from "./pages/videoCall/VideoCallPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -100,6 +101,7 @@ function App() {
             { path: "settingD", element: <SettingD /> },
           ],
         },
+        {path:"video-call/:roomId", element:<VideoCallPage/>}
       ],
     },
     {
