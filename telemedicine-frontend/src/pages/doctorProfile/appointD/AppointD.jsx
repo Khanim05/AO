@@ -45,6 +45,43 @@ const AppointD = () => {
     return `${day}.${month}.${year}`;
   };
 
+  const handleJoinMeeting = async (appointmentId) => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("🔐 Token:", token);
+
+      const canJoinRes = await axios.get(
+        `https://khamiyevbabek-001-site1.ktempurl.com/api/Meeting/canjoin/${appointmentId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!canJoinRes.data) {
+        alert("Hələ görüş vaxtı çatmayıb və ya artıq keçib.");
+        return;
+      }
+
+      const startRes = await axios.post(
+        `https://khamiyevbabek-001-site1.ktempurl.com/api/Meeting/start/${appointmentId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const roomId = startRes.data;
+      if (roomId) {
+        window.location.href = `/video-call/${roomId}`;
+      } else {
+        alert("Otaq ID alına bilmədi.");
+      }
+    } catch (err) {
+      console.error("Zəngə qoşulma zamanı xəta:", err);
+      alert("Zəngə qoşulmaq mümkün olmadı.");
+    }
+  };
+
   return (
     <div className="appointments-wrapper">
       <h2 className="welcome-text">Pasiyentlərlə Görüşlər</h2>
@@ -90,6 +127,12 @@ const AppointD = () => {
                       <strong>Bitmə vaxtı:</strong>{" "}
                       {formatDateTime(item.endTime)}
                     </p>
+                    <button
+                      className="join-button"
+                      onClick={() => handleJoinMeeting(item.id)}
+                    >
+                      Zəngə qoşul
+                    </button>
                   </div>
                 </li>
               ))}

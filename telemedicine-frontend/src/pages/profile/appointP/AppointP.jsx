@@ -64,15 +64,15 @@ const AppointP = () => {
     try {
       const token = localStorage.getItem("token");
 
-      // const canJoinRes = await axios.get(
-      //   `/api/Meeting/canjoin/${appointmentId}`,
-      //   {
-      //     headers: { Authorization: `Bearer ${token}` },
-      //   }
-      // );
+      const canJoinRes = await axios.get(
+        `/api/Meeting/canjoin/${appointmentId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       // BURA YENİ QOŞ — test üçün:
-      const canJoinRes = { data: true }; // <=== YALNIZ TEST ÜÇÜN!
+      // const canJoinRes = { data: true }; // <=== YALNIZ TEST ÜÇÜN!
 
       if (!canJoinRes.data) {
         alert("Hələ görüş vaxtı çatmayıb və ya artıq keçib.");

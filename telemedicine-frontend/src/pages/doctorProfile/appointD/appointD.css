@@ -1,0 +1,13 @@
+.join-button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.join-button:hover {
+  background-color: #1e40af;
+}
