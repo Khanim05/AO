@@ -4,12 +4,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./appointmentModal.css";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
+
 const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [confirmationMsg, setConfirmationMsg] = useState("");
+
+  // ✅ Yerli tarix formatlama (UTC yox)
+  const formatDateForApi = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   // ✅ Saat formatlama (məsələn: 09:00)
   const formatHourMinute = (timeStr) => {
@@ -50,7 +59,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
           {
             params: {
               doctorId,
-              date: selectedDate.toISOString().split("T")[0], // ✅ düz tarixi göndər
+              date: formatDateForApi(selectedDate), // ✅ düzəliş burda
             },
           }
         );
@@ -75,7 +84,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        toast.info("Zəhmət olmasa daxil olun.")
+        toast.info("Zəhmət olmasa daxil olun.");
         return;
       }
 
@@ -107,7 +116,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
       );
     } catch (error) {
       console.error("Görüş təyin edilərkən xəta:", error);
-      toast.error("Görüş təyin edilə bilmədi.")
+      toast.error("Görüş təyin edilə bilmədi.");
     }
   };
 
@@ -168,7 +177,7 @@ const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
           </div>
         )}
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };

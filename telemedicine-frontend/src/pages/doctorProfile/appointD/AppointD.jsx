@@ -56,6 +56,7 @@ const AppointD = () => {
     try {
       const token = localStorage.getItem("token");
       console.log("🔐 Token:", token);
+      console.log("📌 Appointment ID:", appointmentId);
 
       const canJoinRes = await axios.get(
         `https://khamiyevbabek-001-site1.ktempurl.com/api/Meeting/canjoin/${appointmentId}`,

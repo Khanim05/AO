@@ -22,49 +22,46 @@ const VideoCall = () => {
       .getUserMedia({ video: true, audio: true })
       .then((currentStream) => {
         setStream(currentStream);
-        if (userVideo.current) {
-          userVideo.current.srcObject = currentStream;
-        }
+        userVideo.current.srcObject = currentStream;
 
-        connection.start().then(() => {
-          connection.invoke("JoinRoom", roomId);
-        });
+        connection
+          .start()
+          .then(() => {
+            console.log("🟢 SignalR bağlantısı uğurla başladı");
+            connection.invoke("JoinRoom", roomId);
+          })
+          .catch((err) => console.error("❌ SignalR bağlantı xətası:", err));
 
-        // ✅ Qarşı tərəflər otaqdadırsa
         connection.on("AllUsers", (users) => {
           console.log("💡 AllUsers gəldi:", users);
-          users.forEach((userId) => {
-            const peer = createPeer(
-              userId,
-              connection.connectionId,
-              currentStream
-            );
-            peerRef.current[userId] = peer;
+          users.forEach((connId) => {
+            const peer = createPeer(connId, currentStream);
+            peerRef.current[connId] = peer;
           });
         });
 
-        // ✅ Yeni qoşulan biri varsa
-        connection.on("UserJoined", (userId) => {
-          console.log("➕ Yeni qoşulan:", userId);
-          const peer = createPeer(
-            userId,
-            connection.connectionId,
-            currentStream
-          );
-          peerRef.current[userId] = peer;
+        connection.on("UserJoined", (connId) => {
+          console.log("➕ Yeni qoşulan:", connId);
+          setTimeout(() => {
+            const peer = createPeer(connId, currentStream);
+            peerRef.current[connId] = peer;
+          }, 1000); // gecikmə ilə
         });
 
-        // ✅ Qarşı tərəfdən siqnal alındı
-        connection.on("ReceiveOffer", (fromUserId, sdp) => {
-          console.log("📡 Siqnal gəldi:", fromUserId);
-          const peer = addPeer(JSON.parse(sdp), fromUserId, currentStream);
-          peerRef.current[fromUserId] = peer;
+        connection.on("ReceiveOffer", (fromId, sdp) => {
+          console.log("📡 Offer gəldi:", fromId);
+          const peer = addPeer(JSON.parse(sdp), fromId, currentStream);
+          peerRef.current[fromId] = peer;
         });
 
-        // ✅ Qarşı tərəfə cavab göndər
-        connection.on("ReceiveAnswer", (fromUserId, sdp) => {
-          console.log("📩 Geri siqnal gəldi:", fromUserId);
-          peerRef.current[fromUserId]?.signal(JSON.parse(sdp));
+        connection.on("ReceiveAnswer", (fromId, sdp) => {
+          console.log("📩 Answer gəldi:", fromId);
+          peerRef.current[fromId]?.signal(JSON.parse(sdp));
+        });
+
+        connection.on("ReceiveIceCandidate", (fromId, candidate) => {
+          console.log("❄ ICE gəldi:", fromId);
+          peerRef.current[fromId]?.signal(JSON.parse(candidate));
         });
       });
 
@@ -74,76 +71,70 @@ const VideoCall = () => {
     };
   }, [roomId]);
 
-  const createPeer = (userToSignal, callerID, stream) => {
-    const peer = new Peer({ initiator: true, trickle: false, stream });
+  const createPeer = (toId, stream) => {
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream,
+      config: {
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+      },
+    });
 
     peer.on("signal", (signal) => {
-      connectionRef.current?.invoke(
-        "SendOffer",
-        userToSignal,
-        JSON.stringify(signal)
-      );
+      console.log("📤 Offer signal:", signal);
+      connectionRef.current
+        ?.invoke("SendOffer", toId, JSON.stringify(signal))
+        .catch((err) => console.error("❌ Offer invoke error:", err));
     });
 
     peer.on("stream", (remoteStream) => {
-      if (partnerVideo.current) {
-        partnerVideo.current.srcObject = remoteStream;
-      }
+      console.log("📺 Qarşı tərəf video gəldi");
+      partnerVideo.current.srcObject = remoteStream;
     });
+
+    peer.on("error", (err) => console.error("❌ Peer error:", err));
 
     return peer;
   };
 
-  const addPeer = (incomingSignal, callerID, stream) => {
-    const peer = new Peer({ initiator: false, trickle: false, stream });
+  const addPeer = (incomingSignal, fromId, stream) => {
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream,
+      config: {
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+      },
+    });
 
     peer.on("signal", (signal) => {
-      connectionRef.current?.invoke(
-        "SendAnswer",
-        callerID,
-        JSON.stringify(signal)
-      );
+      console.log("📤 Answer signal:", signal);
+      connectionRef.current
+        ?.invoke("SendAnswer", fromId, JSON.stringify(signal))
+        .catch((err) => console.error("❌ Answer invoke error:", err));
     });
 
     peer.on("stream", (remoteStream) => {
-      if (partnerVideo.current) {
-        partnerVideo.current.srcObject = remoteStream;
-      }
+      console.log("📺 Qarşı tərəf video gəldi (responder)");
+      partnerVideo.current.srcObject = remoteStream;
     });
+
+    peer.on("error", (err) => console.error("❌ Peer error:", err));
 
     peer.signal(incomingSignal);
     return peer;
   };
 
   return (
-    <div
-      className="video-room"
-      style={{
-        display: "flex",
-        gap: "20px",
-        justifyContent: "center",
-        marginTop: "40px",
-        flexWrap: "wrap",
-      }}
-    >
+    <div style={{ display: "flex", gap: "20px", justifyContent: "center", marginTop: "40px" }}>
       <div>
         <h3>Siz</h3>
-        <video
-          ref={userVideo}
-          autoPlay
-          playsInline
-          muted
-          style={{ width: "300px", borderRadius: "10px" }}
-        />
+        <video ref={userVideo} autoPlay playsInline muted style={{ width: "300px", borderRadius: "10px" }} />
       </div>
       <div>
         <h3>Həkim / Pasiyent</h3>
-        <video
-          ref={partnerVideo}
-          autoPlay
-          playsInline
-          style={{ width: "300px", borderRadius: "10px" }}
-        />
+        <video ref={partnerVideo} autoPlay playsInline style={{ width: "300px", borderRadius: "10px" }} />
       </div>
     </div>
   );
