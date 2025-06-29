@@ -1,0 +1,235 @@
+.video-call-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 80px);
+  background-color: var(--bg-main, #f5f5f5);
+  overflow: hidden;
+}
+
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Əvvəl cover idi → indi contain */
+  background: hsl(0, 0%, 92%);
+  z-index: 1;
+}
+
+
+.local-video {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 180px;
+  height: 130px;
+  border-radius: 12px;
+  object-fit: cover;
+  z-index: 2;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  border: 2px solid white;
+}
+
+.control-panel {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px 20px;
+  border-radius: 35px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.control-button {
+  background: #f0f0f0;
+  border: none;
+  color: #333;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.control-button:hover {
+  transform: scale(1.15);
+  background: #e0e0e0;
+}
+
+.control-button.leave {
+  background: #ff4d4d;
+  color: white;
+}
+
+.control-button.leave:hover {
+  background: #e63946;
+}
+
+
+.dark .video-call-container {
+  background-color: #0e0e11; /* Daha dərin və göz yormayan tünd fon */
+}
+
+.dark .remote-video {
+  background: #1a1a1d; /* Daha yumşaq qara, göz üçün rahat */
+  filter: brightness(0.95) contrast(1.05); /* Görüntü zərif tənzimlənməsi */
+}
+
+.dark .local-video {
+  border: 2px solid rgba(255, 255, 255, 0.15); /* Yumşaq kontur */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* İncə glow effekti */
+}
+
+/* 🔥 DARK MODE uyğunluğu */
+.dark .control-panel {
+  background: rgba(20, 20, 20, 0.7);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.dark .control-button {
+  background: #2d2d2d;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dark .control-button:hover {
+  background: #3f3f3f;
+}
+
+.dark .control-button.leave {
+  background: #ff4d4d;
+}
+
+.dark .control-button.leave:hover {
+  background: #c0392b;
+}
+
+.custom-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-modal {
+  background: var(--card-bg, #fff);
+  color: var(--text-main, #000);
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.dark .custom-modal {
+  background: #1e1e1e;
+  color: #fff;
+}
+
+.custom-modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.custom-modal-buttons button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #eee;
+  color: #333;
+  transition: 0.2s ease;
+}
+
+.custom-modal-buttons button:hover {
+  background-color: #ddd;
+}
+
+.custom-modal-buttons .leave {
+  background-color: crimson;
+  color: white;
+}
+
+.custom-modal-buttons .leave:hover {
+  background-color: darkred;
+}
+
+.dark .custom-modal-buttons button {
+  background-color: #333;
+  color: #eee;
+}
+
+.dark .custom-modal-buttons button:hover {
+  background-color: #444;
+}
+
+
+
+/* Ekran genişliyi 768px-dən az olduqda (mobil və bəzi tablet) */
+@media (max-width: 768px) {
+  .video-call-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .remote-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .local-video {
+    width: 120px;
+    height: 90px;
+    bottom: 80px; /* control-panel ilə toqquşmasın deyə yuxarı çəkirik */
+    right: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+  }
+
+  .control-panel {
+    flex-direction: row;
+    gap: 15px;
+    padding: 8px 16px;
+    bottom: 15px;
+  }
+
+  .control-button {
+    font-size: 18px;
+  }
+}
+
+/* Daha dar mobil ekranlar üçün (500px və altı) */
+@media (max-width: 500px) {
+  .local-video {
+    width: 100px;
+    height: 75px;
+  }
+
+  .control-panel {
+    gap: 12px;
+    padding: 6px 12px;
+  }
+
+  .control-button {
+    font-size: 16px;
+  }
+}
+
+
