@@ -1,15 +1,16 @@
+// Yeni WebRTC bazlı video call komponenti (SignalR backendə uyğun)
+
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import Peer from "simple-peer";
 import { createVideoSignalConnection } from "../../sockets/videoSignal";
 
 const VideoCall = () => {
   const { roomId } = useParams();
   const [stream, setStream] = useState(null);
-  const peerRef = useRef({});
   const userVideo = useRef();
   const partnerVideo = useRef();
   const connectionRef = useRef(null);
+  const peerConnections = useRef({});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -18,123 +19,144 @@ const VideoCall = () => {
     const connection = createVideoSignalConnection(token);
     connectionRef.current = connection;
 
+    connection
+      .start()
+      .then(() => {
+        console.log("🟢 SignalR bağlantısı uğurla başladı");
+        connection.invoke("JoinRoom", roomId);
+      })
+      .catch((err) => console.error("❌ SignalR bağlantı xətası:", err));
+
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
-      .then((currentStream) => {
-        setStream(currentStream);
-        userVideo.current.srcObject = currentStream;
-
-        connection
-          .start()
-          .then(() => {
-            console.log("🟢 SignalR bağlantısı uğurla başladı");
-            connection.invoke("JoinRoom", roomId);
-          })
-          .catch((err) => console.error("❌ SignalR bağlantı xətası:", err));
+      .then((localStream) => {
+        console.log("🎥 Stream alındı:", localStream);
+        console.log("🎙 Audio tracks:", localStream.getAudioTracks());
+        setStream(localStream);
+        if (userVideo.current) {
+          userVideo.current.srcObject = localStream;
+        }
 
         connection.on("AllUsers", (users) => {
           console.log("💡 AllUsers gəldi:", users);
-          users.forEach((connId) => {
-            const peer = createPeer(connId, currentStream);
-            peerRef.current[connId] = peer;
+          users.forEach((userId) => {
+            createOffer(userId, localStream);
           });
         });
 
-        connection.on("UserJoined", (connId) => {
-          console.log("➕ Yeni qoşulan:", connId);
-          setTimeout(() => {
-            const peer = createPeer(connId, currentStream);
-            peerRef.current[connId] = peer;
-          }, 1000); // gecikmə ilə
+        connection.on("UserJoined", (userId) => {
+          console.log("➕ Yeni qoşulan:", userId);
         });
 
-        connection.on("ReceiveOffer", (fromId, sdp) => {
+        connection.on("ReceiveOffer", async (fromId, offerStr) => {
           console.log("📡 Offer gəldi:", fromId);
-          const peer = addPeer(JSON.parse(sdp), fromId, currentStream);
-          peerRef.current[fromId] = peer;
+          await createAnswer(fromId, localStream, JSON.parse(offerStr));
         });
 
-        connection.on("ReceiveAnswer", (fromId, sdp) => {
+        connection.on("ReceiveAnswer", async (fromId, answerStr) => {
           console.log("📩 Answer gəldi:", fromId);
-          peerRef.current[fromId]?.signal(JSON.parse(sdp));
+          await peerConnections.current[fromId]?.setRemoteDescription(
+            new RTCSessionDescription(JSON.parse(answerStr))
+          );
         });
 
-        connection.on("ReceiveIceCandidate", (fromId, candidate) => {
-          console.log("❄ ICE gəldi:", fromId);
-          peerRef.current[fromId]?.signal(JSON.parse(candidate));
+        connection.on("ReceiveIceCandidate", async (fromId, candidateStr) => {
+          console.log("❄ ICE Candidate gəldi:", fromId);
+          await peerConnections.current[fromId]?.addIceCandidate(
+            new RTCIceCandidate(JSON.parse(candidateStr))
+          );
         });
       });
 
     return () => {
-      Object.values(peerRef.current).forEach((peer) => peer.destroy());
+      Object.values(peerConnections.current).forEach((pc) => pc.close());
       connectionRef.current?.stop();
     };
   }, [roomId]);
 
-  const createPeer = (toId, stream) => {
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream,
-      config: {
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-      },
+  const createPeer = (userId) => {
+    const peer = new RTCPeerConnection({
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
 
-    peer.on("signal", (signal) => {
-      console.log("📤 Offer signal:", signal);
-      connectionRef.current
-        ?.invoke("SendOffer", toId, JSON.stringify(signal))
-        .catch((err) => console.error("❌ Offer invoke error:", err));
-    });
+    peer.onicecandidate = (event) => {
+      if (event.candidate) {
+        connectionRef.current?.invoke(
+          "SendIceCandidate",
+          userId,
+          JSON.stringify(event.candidate)
+        );
+      }
+    };
 
-    peer.on("stream", (remoteStream) => {
-      console.log("📺 Qarşı tərəf video gəldi");
-      partnerVideo.current.srcObject = remoteStream;
-    });
+    peer.ontrack = (event) => {
+  console.log("🗺 Qarşı tərəfdən stream:", event);
+  const [remoteStream] = event.streams;
 
-    peer.on("error", (err) => console.error("❌ Peer error:", err));
+  if (remoteStream && partnerVideo.current) {
+    partnerVideo.current.srcObject = remoteStream;
+    partnerVideo.current.muted = false;
+    partnerVideo.current.volume = 1;
+  }
+};
 
     return peer;
   };
 
-  const addPeer = (incomingSignal, fromId, stream) => {
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream,
-      config: {
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-      },
-    });
+  const createOffer = async (toId, localStream) => {
+    const peer = createPeer(toId);
+    peerConnections.current[toId] = peer;
 
-    peer.on("signal", (signal) => {
-      console.log("📤 Answer signal:", signal);
-      connectionRef.current
-        ?.invoke("SendAnswer", fromId, JSON.stringify(signal))
-        .catch((err) => console.error("❌ Answer invoke error:", err));
-    });
+    localStream
+      .getTracks()
+      .forEach((track) => peer.addTrack(track, localStream));
 
-    peer.on("stream", (remoteStream) => {
-      console.log("📺 Qarşı tərəf video gəldi (responder)");
-      partnerVideo.current.srcObject = remoteStream;
-    });
+    const offer = await peer.createOffer();
+    await peer.setLocalDescription(offer);
+    connectionRef.current?.invoke("SendOffer", toId, JSON.stringify(offer));
+  };
 
-    peer.on("error", (err) => console.error("❌ Peer error:", err));
+  const createAnswer = async (fromId, localStream, offer) => {
+    const peer = createPeer(fromId);
+    peerConnections.current[fromId] = peer;
 
-    peer.signal(incomingSignal);
-    return peer;
+    localStream
+      .getTracks()
+      .forEach((track) => peer.addTrack(track, localStream));
+
+    await peer.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await peer.createAnswer();
+    await peer.setLocalDescription(answer);
+    connectionRef.current?.invoke("SendAnswer", fromId, JSON.stringify(answer));
   };
 
   return (
-    <div style={{ display: "flex", gap: "20px", justifyContent: "center", marginTop: "40px" }}>
+    <div
+      style={{
+        display: "flex",
+        gap: "20px",
+        justifyContent: "center",
+        marginTop: "40px",
+      }}
+    >
       <div>
         <h3>Siz</h3>
-        <video ref={userVideo} autoPlay playsInline muted style={{ width: "300px", borderRadius: "10px" }} />
+        <video
+          ref={userVideo}
+          autoPlay
+          playsInline
+          muted
+          style={{ width: "300px", borderRadius: "10px" }}
+        />
       </div>
       <div>
         <h3>Həkim / Pasiyent</h3>
-        <video ref={partnerVideo} autoPlay playsInline style={{ width: "300px", borderRadius: "10px" }} />
+        <video
+          ref={partnerVideo}
+          autoPlay
+          playsInline
+          style={{ width: "300px", borderRadius: "10px" }}
+        />
       </div>
     </div>
   );
