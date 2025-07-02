@@ -6,9 +6,6 @@ import About from "./pages/about/About";
 import Doctor from "./pages/doctor/Doctor";
 import Profile from "./pages/profile/Profile";
 import PrivateRoute from "./routes/PrivateRoute";
-// App.jsx və ya slider komponentinin içində
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import Register from "./pages/register/Register";
 import { AnimatePresence } from "framer-motion";
 import RegisterD from "./pages/regDoctor/RegisterD";
@@ -124,8 +121,8 @@ function App() {
         </PrivateRoute>
       ),
       children: [
-        { index: true, element: <Navigate to="dashboard" /> }, // default yönləndirmə
-        { path: "dashboard", element: <Dashboard /> }, // boş olsa da işləyir
+        { index: true, element: <Navigate to="dashboard" /> },
+        { path: "dashboard", element: <Dashboard /> }, 
         { path: "users", element: <Users /> },
         { path: "accept-doctor", element: <AcceptDoctor /> },
         { path: "pending-doctor", element: <PendingDoctor /> },

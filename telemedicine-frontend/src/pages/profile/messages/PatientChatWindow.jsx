@@ -7,6 +7,7 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const chatEndRef = useRef(null);
+  const inputRef = useRef(null);
   const token = localStorage.getItem("token");
 
   let currentUserId = null;
@@ -17,6 +18,10 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
       ];
   }
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     if (!receiverId) return;
@@ -87,7 +92,7 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
 
   return (
     <div className="chat-window">
-      <div className="chat-header" style={{marginTop:"70px"}}>{receiverName}</div>
+      <div className="chat-header">{receiverName}</div>
 
       <div className="chat-messages">
         {messages.length === 0 && (
@@ -121,6 +126,7 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
 
       <div className="chat-input-area">
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}

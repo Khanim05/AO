@@ -9,7 +9,7 @@ const authHeader = () => ({
 });
 
 export const getMessagesWithUser = (userId) =>
-  axios.get(`/api/Chat/with/${userId}`, authHeader()); // ✅ proxy ilə
+  axios.get(`/api/Chat/with/${userId}`, authHeader());
 
 export const getApprovedDoctors = () =>
   axios.get(`/api/DoctorProfile/approved`);

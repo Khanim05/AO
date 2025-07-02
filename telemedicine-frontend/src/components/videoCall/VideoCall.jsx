@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { createVideoSignalConnection } from "../../sockets/videoSignal";
+import axios from "axios";
 import "./videocall.css";
 import {
   FaMicrophone,
@@ -10,19 +11,101 @@ import {
   FaPhoneSlash,
 } from "react-icons/fa";
 
-const VideoCall = () => {
-  const { roomId } = useParams();
-  const navigate = useNavigate();
+const VideoCall = (props) => {
+  const params = useParams();
+  const location = useLocation();
+
+  const roomId = props.roomId ?? params.roomId;
+
+const appointmentId = useMemo(() => {
+  const rawId =
+    typeof props.roomId === "object"
+      ? props.roomId?.id
+      : props.roomId ?? location.state?.appointmentId ?? params.roomId;
+
+  const parsed = Number(rawId);
+  return isNaN(parsed) ? null : parsed;
+}, [props.roomId, location.state, params.roomId]);
+
+console.log("🧠 props.roomId:", props.roomId);
+console.log("🧠 props.roomId.id:", props.roomId?.id);
+console.log("🧠 location.state:", location.state);
+console.log("🧠 params.roomId:", params.roomId);
+console.log("🧠 Final appointmentId:", appointmentId);
+
+
+
+
   const [stream, setStream] = useState(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCamOn, setIsCamOn] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [endTime, setEndTime] = useState(null);
+  const [remainingTime, setRemainingTime] = useState("");
 
   const userVideo = useRef();
   const partnerVideo = useRef();
   const connectionRef = useRef(null);
   const peerConnections = useRef({});
 
+  // ✅ Appointment vaxtını götür
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  const id = props.roomId || location.state?.appointmentId || params.roomId;
+  const appointmentId = Number(id);
+
+  console.log("📛 Token:", token);
+  console.log("📛 Appointment ID:", appointmentId);
+
+  if (!token || !appointmentId) {
+    console.warn("⛔ Token və ya appointmentId yoxdur!");
+    return;
+  }
+
+  axios
+    .get("https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/patient", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      console.log("📦 Gələn cavab:", res.data);
+      const appointment = res.data.find((a) => a.id === appointmentId);
+      console.log("🎯 Tapılan appointment:", appointment);
+      if (appointment) {
+        setEndTime(new Date(appointment.endTime));
+      } else {
+        console.warn("❗ Görüş tapılmadı:", appointmentId);
+      }
+    })
+    .catch((err) => {
+      console.error("🛑 Schedule API xətası:", err);
+    });
+}, [props.roomId, location.state, params.roomId]);
+
+
+  // ✅ Qalan vaxt
+  useEffect(() => {
+    if (!endTime) return;
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      const diff = Math.max(0, endTime - now);
+      const min = Math.floor(diff / 60000);
+      const sec = Math.floor((diff % 60000) / 1000);
+      setRemainingTime(
+        `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
+      );
+
+      if (diff <= 0) {
+        clearInterval(interval);
+        connectionRef.current?.stop();
+        window.location.href = "/";
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [endTime]);
+
+  // ✅ WebRTC + SignalR bağlantısı
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -32,10 +115,8 @@ const VideoCall = () => {
 
     connection
       .start()
-      .then(() => {
-        connection.invoke("JoinRoom", roomId);
-      })
-      .catch((err) => console.error("SignalR error:", err));
+      .then(() => connection.invoke("JoinRoom", roomId))
+      .catch((err) => console.error("SignalR xətası:", err));
 
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
@@ -44,9 +125,7 @@ const VideoCall = () => {
         userVideo.current.srcObject = localStream;
 
         connection.on("AllUsers", (users) => {
-          users.forEach((userId) => {
-            createOffer(userId, localStream);
-          });
+          users.forEach((userId) => createOffer(userId, localStream));
         });
 
         connection.on("UserJoined", (userId) => {
@@ -104,11 +183,9 @@ const VideoCall = () => {
   const createOffer = async (toId, localStream) => {
     const peer = createPeer(toId);
     peerConnections.current[toId] = peer;
-
     localStream
       .getTracks()
       .forEach((track) => peer.addTrack(track, localStream));
-
     const offer = await peer.createOffer();
     await peer.setLocalDescription(offer);
     connectionRef.current?.invoke("SendOffer", toId, JSON.stringify(offer));
@@ -117,11 +194,9 @@ const VideoCall = () => {
   const createAnswer = async (fromId, localStream, offer) => {
     const peer = createPeer(fromId);
     peerConnections.current[fromId] = peer;
-
     localStream
       .getTracks()
       .forEach((track) => peer.addTrack(track, localStream));
-
     await peer.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await peer.createAnswer();
     await peer.setLocalDescription(answer);
@@ -130,22 +205,19 @@ const VideoCall = () => {
 
   const handleToggleMic = () => {
     stream
-      .getAudioTracks()
+      ?.getAudioTracks()
       .forEach((track) => (track.enabled = !track.enabled));
     setIsMicOn((prev) => !prev);
   };
 
   const handleToggleCam = () => {
     stream
-      .getVideoTracks()
+      ?.getVideoTracks()
       .forEach((track) => (track.enabled = !track.enabled));
     setIsCamOn((prev) => !prev);
   };
 
-  const handleLeave = () => {
-    console.log("🟡 Leave clicked");
-    setShowConfirmModal(true);
-  };
+  const handleLeave = () => setShowConfirmModal(true);
 
   return (
     <div className="video-call-container">
@@ -158,6 +230,8 @@ const VideoCall = () => {
         className="local-video"
       />
 
+      <div className="call-timer">Qalan vaxt: {remainingTime || "00:00"}</div>
+
       <div className="control-panel">
         <button className="control-button" onClick={handleToggleMic}>
           {isMicOn ? <FaMicrophone /> : <FaMicrophoneSlash />}
@@ -169,27 +243,31 @@ const VideoCall = () => {
           <FaPhoneSlash />
         </button>
       </div>
-      {/* 👇 BURA əlavə et modalı */}
-      {showConfirmModal && (
-  <div className="custom-backdrop" onClick={() => setShowConfirmModal(false)}>
-    <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
-      <h3>Görüşdən çıxmaq istəyirsiniz?</h3>
-      <div className="custom-modal-buttons">
-        <button onClick={() => setShowConfirmModal(false)}>Ləğv et</button>
-        <button
-          className="leave"
-          onClick={() => {
-            connectionRef.current?.stop();
-            window.location.href = "/";
-          }}
-        >
-          Çıx
-        </button>
-      </div>
-    </div>
-  </div>
-)}
 
+      {showConfirmModal && (
+        <div
+          className="custom-backdrop"
+          onClick={() => setShowConfirmModal(false)}
+        >
+          <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Görüşdən çıxmaq istəyirsiniz?</h3>
+            <div className="custom-modal-buttons">
+              <button onClick={() => setShowConfirmModal(false)}>
+                Ləğv et
+              </button>
+              <button
+                className="leave"
+                onClick={() => {
+                  connectionRef.current?.stop();
+                  window.location.href = "/";
+                }}
+              >
+                Çıx
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

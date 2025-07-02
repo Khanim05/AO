@@ -122,6 +122,26 @@
   justify-content: center;
 }
 
+@keyframes fadeInScale {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.call-timer {
+  position: absolute;
+  top: 50px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 9999;
+}
+
+
+
 .custom-modal {
   background: var(--card-bg, #fff);
   color: var(--text-main, #000);
@@ -177,8 +197,6 @@
 .dark .custom-modal-buttons button:hover {
   background-color: #444;
 }
-
-
 
 /* Ekran genişliyi 768px-dən az olduqda (mobil və bəzi tablet) */
 @media (max-width: 768px) {

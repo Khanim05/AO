@@ -14,12 +14,10 @@ img{
   height: 100%;
 }
 
-/* Ana səhifənin əsas fonu */
 body.dark .home-page{
   background-color: #121212;
   color: #f1f1f1;
 }
-/* DARK MODE üçün uyğun stillər */
 
 body.dark .slider-container {
   background-color: #1a1a1a;

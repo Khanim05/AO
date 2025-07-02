@@ -19,6 +19,7 @@
   font-size: 18px;
   font-weight: 600;
   color: #333;
+  margin-top: 20px;
 }
 
 .doctor-list {
@@ -53,9 +54,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 70px); /* Navbar çıxılır */
+  height: 100%; /* bu olsun */
   overflow: hidden;
-  position: relative;
 }
 
 /* Həkimin adı */
@@ -70,6 +70,7 @@
   font-family: Poppins;
   top: 0;
   z-index: 1;
+  margin-top: 50px;
 }
 
 /* Mesaj siyahısı */

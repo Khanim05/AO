@@ -5,7 +5,6 @@ const PrivateRoute = ({ children, role }) => {
   const { token, user, justLoggetOut } = useSelector((state) => state.auth);
 
   if (!token || !user) {
-    // Logout-dan sonra yönləndirməni dəyiş
     return <Navigate to={justLoggetOut ? "/" : "/login"} replace />;
   }
 

@@ -2,18 +2,77 @@ import "./doctors.css";
 import Slider from "react-slick";
 import Doctor from "../doctor/Doctor";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Hamısı");
+  const [sessionCategories, setSessionCategories] = useState(["Hamısı"]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(
+        "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorCategory/all",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        const names = res.data.map((cat) => cat.name);
+        setSessionCategories(["Hamısı", ...names]);
+      })
+      .catch((err) => console.error("Seans növü alınmadı:", err));
+  }, []);
 
   useEffect(() => {
     axios
       .get(
         "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorProfile/approved"
-      ) // Backend endpoint burada
-      .then((res) => setDoctors(res.data))
-      .catch((err) => console.error(err));
+      )
+      .then((res) => {
+        setDoctors(res.data);
+        setFilteredDoctors(res.data);
+      })
+      .catch((err) => console.error("Həkimlər alınmadı:", err));
   }, []);
+
+  useEffect(() => {
+    let filtered = doctors;
+
+    if (selectedCategory !== "Hamısı") {
+      filtered = filtered.filter((d) =>
+        d.categoryName?.toLowerCase().includes(selectedCategory.toLowerCase())
+      );
+    }
+
+    if (searchTerm.trim() !== "") {
+      filtered = filtered.filter((d) =>
+        `${d.name} ${d.surname}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredDoctors(filtered);
+  }, [searchTerm, selectedCategory, doctors]);
 
   const settings = {
     dots: true,
@@ -21,9 +80,9 @@ const Doctors = () => {
     speed: 600,
     slidesToShow: 3,
     slidesToScroll: 1,
-    autoplay: true, // ✅ avtomatik hərəkət
-    autoplaySpeed: 3000, // ✅ hər 3 saniyədə bir
-    cssEase: "linear", // ✅ daha yumşaq sürüşmə üçün
+    autoplay: true,
+    autoplaySpeed: 3000,
+    cssEase: "linear",
     responsive: [
       { breakpoint: 992, settings: { slidesToShow: 2 } },
       { breakpoint: 768, settings: { slidesToShow: 1 } },
@@ -33,32 +92,58 @@ const Doctors = () => {
   return (
     <section className="doctors-section">
       <h2 className="section-title-doctor">Həkimlərimizlə Tanış Olun</h2>
-      <Slider {...settings}>
-        {doctors.map((doctor) => {
-          console.log("GƏLƏN doctor OBYEKTİ:", doctor); // ✅ burdan userId-nin harda olduğunu görəcəyik
 
-          return (
-            <Doctor
-              key={doctor.id}
-              {...doctor}
-              userId={doctor.userId || doctor.user?.id} // fallback varsa
-            />
-          );
-        })}
+      <div className="doctor-filters">
+        <input
+          type="text"
+          placeholder="Həkim axtar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <div className="custom-dropdown" ref={dropdownRef}>
+         <button
+  className="dropdown-toggle"
+  onClick={() => setDropdownOpen(!dropdownOpen)}
+>
+  {selectedCategory === "Hamısı" && !dropdownOpen
+    ? "Seans seçimi"
+    : selectedCategory} 
+</button>
+
+
+          <div
+            className={`dropdown-menu ${
+              dropdownOpen ? "visible-dropdown" : ""
+            }`}
+          >
+            {sessionCategories.map((cat) => (
+              <div
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setDropdownOpen(false);
+                }}
+                className={selectedCategory === cat ? "selected" : ""}
+              >
+                {cat}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <Slider {...settings}>
+        {filteredDoctors.map((doctor) => (
+          <Doctor
+            key={doctor.id}
+            {...doctor}
+            userId={doctor.userId || doctor.user?.id}
+          />
+        ))}
       </Slider>
     </section>
   );
-
-  // return (
-  //     <section className="doctors-section">
-  //     <h2 className="section-title">Həkimlərimizlə Tanış Olun</h2>
-  //     <Slider {...settings}>
-  //       {doctorData.map((doctor) => (
-  //         <Doctor key={doctor.id} {...doctor} />
-  //       ))}
-  //     </Slider>
-  //   </section>
-  // );
 };
 
 export default Doctors;

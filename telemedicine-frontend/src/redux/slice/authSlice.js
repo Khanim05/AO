@@ -14,7 +14,7 @@ const initialState = {
   user: storedUser,
   token: localStorage.getItem("token") || null,
   justLoggetOut: false,
-  darkMode: localStorage.getItem("darkMode") === "true", // ✅ burda əlavə olundu
+  darkMode: localStorage.getItem("darkMode") === "true",
 };
 
 const authSlice = createSlice({
@@ -24,14 +24,14 @@ const authSlice = createSlice({
     loginSuccess: (state, action) => {
       const rawUser = action.payload.user;
 
-      // console.log("📥 Backend user:", rawUser);
+     
 
       const userWithId = {
         ...rawUser,
-        userId: rawUser.id, // 🔥 id varsa userId kimi kopyalayırıq
+        userId: rawUser.id, 
       };
 
-      // console.log("📦 Final user to store:", userWithId);
+    
 
       state.user = userWithId;
       state.token = action.payload.token;
@@ -45,13 +45,13 @@ const authSlice = createSlice({
       state.token = null;
       state.justLoggetOut = true;
 
-      // Clear from localStorage
+      
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
      toggleDarkMode: (state) => {
       state.darkMode = !state.darkMode;
-      localStorage.setItem("darkMode", state.darkMode); // ✅ yadda saxla
+      localStorage.setItem("darkMode", state.darkMode);
     },
   },
 });
