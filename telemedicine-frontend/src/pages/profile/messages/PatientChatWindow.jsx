@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [autoScroll, setAutoScroll] = useState(false); // ✅ Scroll kontrolu
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
   const token = localStorage.getItem("token");
@@ -34,6 +35,7 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
           self: m.senderId === currentUserId,
         }));
         setMessages(formatted);
+        setAutoScroll(false); // ❌ scroll etmə pasiyent seçiləndə
       })
       .catch((err) => {
         if (err.response?.status === 401) {
@@ -63,6 +65,7 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
                 self: msg.senderId === currentUserId,
               },
             ]);
+            setAutoScroll(true); // ✅ yeni mesaj gələndə scroll elə
           }
         });
       } catch (err) {
@@ -77,8 +80,11 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   }, [receiverId]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (autoScroll) {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      setAutoScroll(false); // bir dəfəlik scroll et
+    }
+  }, [messages, autoScroll]);
 
   const sendMessage = async () => {
     if (!input.trim() || connection.state !== "Connected") return;

@@ -6,7 +6,7 @@
 
 /* === SIDEBAR === */
 .profile-sidebar {
-  margin-top: 20px;
+  margin-top: 60px;
   width: 240px;
   background-color: #ffffff;
   border-right: 1px solid #e0e0e0;
@@ -153,7 +153,7 @@ body.dark .btn-video:hover {
 /* === RESPONSIVE (Mobile) === */
 @media (max-width: 768px) {
   .profile-layout {
-    margin-top: 20px;
+    margin-top: 50px;
     flex-direction: column;
   }
 

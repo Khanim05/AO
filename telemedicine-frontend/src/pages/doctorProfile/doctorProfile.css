@@ -20,19 +20,21 @@ body {
 
 .doctor-layout {
   display: flex;
-  margin-top: 60px;
-  height: calc(100vh - 90px);
   width: 100%;
-  overflow: hidden;
+  margin-top: 60px;
 }
 
 .doctor-sidebar {
+  position: fixed;
+  top: 60px; /* headerdən sonra */
+  left: 0;
+  height: calc(100vh - 60px);
   width: 220px;
   background-color: #f3f4f6;
   padding: 1.5rem;
   overflow-y: auto;
   border-right: 1px solid #e5e7eb;
-  margin-top: 20px;
+  z-index: 1000;
 }
 
 .doctor-sidebar h2 {
@@ -75,9 +77,9 @@ body {
 }
 
 .doctor-main {
-  flex: 1;
+  margin-left: 220px;
+  width: calc(100% - 220px);
   padding: 2rem;
-  overflow-y: auto;
   overflow-x: hidden;
   background-color: #ffffff;
   color: #111827;
@@ -141,12 +143,12 @@ body {
   }
 
   .doctor-sidebar {
-    margin-top: 20px;
+    position: static;
     width: 100%;
+    height: auto;
+    margin-top: 0;
     border-right: none;
     border-bottom: 1px solid #ccc;
-    display: block;
-    padding: 1rem;
     text-align: center;
   }
 
@@ -171,7 +173,8 @@ body {
     width: 100%;
   }
 
-  .doctor-main {
-    padding: 1rem;
+    .doctor-main {
+    margin-left: 0;
+    width: 100%;
   }
 }

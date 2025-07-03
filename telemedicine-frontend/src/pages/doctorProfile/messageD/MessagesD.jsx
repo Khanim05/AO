@@ -34,7 +34,7 @@ const MessagesD = () => {
 
   return (
     <div className="messages-container">
-      <div className="doctor-sidebar">
+      <div className="chatDoctor-sidebar">
         <h3>Pasiyentlər</h3>
         <ul className="doctor-list">
           {patients.map((patient) => (
