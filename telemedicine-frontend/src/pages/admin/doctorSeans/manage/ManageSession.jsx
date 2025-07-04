@@ -25,10 +25,10 @@ const ManageSession = ({ onClose }) => {
   const handleSoftDelete = async (id) => {
     try {
       await axios.delete(
-        `https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorCategory/${id}Soft`
+        `https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorCategory/${id}Hard`
       );
       toast.success("Seans növü silindi");
-      fetchCategories(); // yenilə
+      fetchCategories();
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error("Silinmə zamanı xəta baş verdi");

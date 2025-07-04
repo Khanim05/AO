@@ -7,7 +7,7 @@ try {
     storedUser = JSON.parse(userStr);
   }
 } catch (err) {
-  console.error("JSON parse xətası (authSlice):", err);
+  console.error(err);
 }
 
 const initialState = {

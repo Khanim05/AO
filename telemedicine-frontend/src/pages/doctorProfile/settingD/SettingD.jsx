@@ -29,10 +29,7 @@ const SettingD = () => {
             "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
-        // const catRes = await axios.get(
-        //   "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorCategory/all"
-        // );
-        // setCategories(catRes.data);
+      
 
         const approvedRes = await axios.get(
           "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorProfile/approved",
@@ -82,7 +79,7 @@ const SettingD = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    console.log("📦 Fayl seçildi:", file); // 🔍 1
+   
 
     const formDataCloud = new FormData();
     formDataCloud.append("file", file);
@@ -94,7 +91,7 @@ const SettingD = () => {
         formDataCloud
       );
 
-      console.log("✅ Yükləmə nəticəsi:", res.data); // 🔍 2
+     
 
       const fullUrl = res.data.secure_url;
 
@@ -103,10 +100,10 @@ const SettingD = () => {
         imgUrl: fullUrl,
       }));
 
-      toast.success("Şəkil uğurla yükləndi ✅");
+      toast.success("Şəkil uğurla yükləndi");
     } catch (err) {
-      toast.error("Yükləmə zamanı xəta baş verdi ❌");
-      console.error("❌ Upload error:", err); // 🔍 3
+      toast.error("Yükləmə zamanı xəta baş verdi ");
+      console.error(" Upload error:", err); 
     }
   };
 

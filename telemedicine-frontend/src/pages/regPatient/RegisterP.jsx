@@ -30,20 +30,20 @@ const RegisterP = () => {
       toast.error("Bu email ilə artıq qeydiyyatdan keçilib!");
       return;
     }
-        // Doğum tarixini formatla
+     
         const formattedValues = {
           ...values,
           BirthDate: values.BirthDate.toISOString(),
 
         };
 
-        // LocalStorage-də yadda saxla (və ya context istifadə et)
+        
         localStorage.setItem(
           "registerPatientData",
           JSON.stringify(formattedValues)
         );
 
-        // Növbəti mərhələyə keç
+        
         navigate("/register/profile-photo");
       } catch (error) {
         if (
@@ -79,7 +79,7 @@ const RegisterP = () => {
           <div className="glass-right">
             <h2>Pasiyent Qeydiyyatı</h2>
             <form onSubmit={formik.handleSubmit} className="glass-form">
-              {/* inputlar burada olacaq */}{" "}
+              {/* inputlar*/}{" "}
               <div className="input-group">
                 <label htmlFor="name">Ad</label>
                 <input

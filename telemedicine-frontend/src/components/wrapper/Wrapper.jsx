@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
+import { clearNotification } from "../../redux/slice/notificationSlice";
+import GlobalMessageListener from "../global/GlobalMessageListener";
+import { FiBell } from "react-icons/fi"; // ✅ Bell icon
 import "./wrapper.css";
+
 const Wrapper = () => {
   const { token, user } = useSelector((state) => state.auth);
+  const hasNotification = useSelector((state) => state.notification.hasNotification);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [fadeOut, setFadeOut] = useState(false);
   const [targetRoute, setTargetRoute] = useState("");
 
@@ -22,7 +29,7 @@ const Wrapper = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fadeOut && targetRoute) {
       const timeout = setTimeout(() => {
         navigate(targetRoute);
@@ -31,6 +38,19 @@ const Wrapper = () => {
     }
   }, [fadeOut, targetRoute, navigate]);
 
+  const handleNotifClick = () => {
+    dispatch(clearNotification());
+    if (user?.role === "Patient") {
+      navigate("/profile/messagesP");
+    } else {
+      navigate("/doctor/messagesD");
+    }
+  };
+
+  useEffect(() => {
+   
+  }, [hasNotification]);
+
   return (
     <motion.div
       className="sign-area"
@@ -38,24 +58,29 @@ const Wrapper = () => {
       animate={{ opacity: fadeOut ? 0 : 1, scale: fadeOut ? 0.95 : 1 }}
       transition={{ duration: 0.4 }}
     >
-      {token && (user?.role === "Patient" || user?.role == "Doctor") ? (
-        <button className="btnLogin" onClick={handleRoute}>
-          Profil
-        </button>
+      <GlobalMessageListener />
+
+      {token && (user?.role === "Patient" || user?.role === "Doctor") ? (
+        <div className="profile-actions">
+          {/* 👤 Profil düyməsi əvvəl */}
+          <button className="btnLogin" onClick={handleRoute}>
+            Profil
+          </button>
+
+          {/* 🔔 Bildiriş ikonu sonra */}
+          <div className="notif-icon" onClick={handleNotifClick}>
+            <FiBell size={23} />
+            {hasNotification && <span className="notif-dot"></span>}
+          </div>
+        </div>
       ) : (
         <>
           {!token && (
             <>
-              <button
-                className="btnLogin"
-                onClick={() => handleClick("/login")}
-              >
+              <button className="btnLogin" onClick={() => handleClick("/login")}>
                 Daxil Ol
               </button>
-              <button
-                className="btnRegister"
-                onClick={() => handleClick("/register")}
-              >
+              <button className="btnRegister" onClick={() => handleClick("/register")}>
                 Qeydiyyat
               </button>
             </>

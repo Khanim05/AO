@@ -37,7 +37,7 @@ const RegisterPhoto = () => {
     formData.append("Password", step1Data.Password);
     formData.append("ConfirmPassword", step1Data.ConfirmPassword);
     formData.append("BirthDate", step1Data.BirthDate);
-    formData.append("ProfileImage", selectedImage); // ✅ düzəliş
+    formData.append("ProfileImage", selectedImage); 
 
     try {
       for (let pair of formData.entries()) {

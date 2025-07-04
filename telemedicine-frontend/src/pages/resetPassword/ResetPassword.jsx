@@ -33,7 +33,7 @@ const ResetPassword = () => {
         }
       );
 
-      toast.success(response.data); // Backend string qaytarır
+      toast.success(response.data); 
       setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
       console.error(error);

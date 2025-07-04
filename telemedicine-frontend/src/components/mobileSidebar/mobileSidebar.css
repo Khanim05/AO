@@ -131,3 +131,80 @@ body.dark .close-btn {
   color: #d1d5db;
 }
 
+.notif-wrapper-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+.notif-icon-mobile {
+  font-size: 24px;
+  color: #333;
+}
+
+.notif-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 9px;
+  height: 9px;
+  background-color: red;
+  border-radius: 50%;
+}
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.sidebar-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notif-wrapper-mobile {
+  position: relative;
+  cursor: pointer;
+}
+
+.notif-icon-mobile {
+  font-size: 22px;
+  color: #333;
+}
+
+.notif-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.ping {
+  animation: ping 1.3s infinite ease-in-out;
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+

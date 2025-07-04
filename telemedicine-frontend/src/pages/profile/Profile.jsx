@@ -25,7 +25,7 @@ const Profile = () => {
   return (
     <div className="profile-layout">
       <aside className="profile-sidebar">
-        {/* <h2 className="profile-logo">Telemedicine</h2> */}
+        
         <nav className="profile-nav">
           <NavLink
             to="/profile/myProfile"

@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import connection from "../../../sockets/chatHub";
 import { getMessagesWithUser } from "../../../services/chatService";
 import { jwtDecode } from "jwt-decode";
+import "./chat.css";
+import connection from "../../../sockets/chatHub";
+import { useDispatch } from "react-redux";
+import { setCurrentReceiverId,clearCurrentReceiverId } from "../../../redux/slice/chatSlice";
 
 const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [autoScroll, setAutoScroll] = useState(false); // ✅ Scroll kontrolu
+  const [autoScroll, setAutoScroll] = useState(false);
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
+  const dispatch = useDispatch();
   const token = localStorage.getItem("token");
-
   let currentUserId = null;
   if (token) {
     const decoded = jwtDecode(token);
-    currentUserId =
-      decoded[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-      ];
+    currentUserId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
   }
 
   useEffect(() => {
@@ -35,94 +35,89 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
           self: m.senderId === currentUserId,
         }));
         setMessages(formatted);
-        setAutoScroll(false); // ❌ scroll etmə pasiyent seçiləndə
+        setAutoScroll(false);
       })
       .catch((err) => {
-        if (err.response?.status === 401) {
-          alert("Giriş etməlisiniz. Sessiyanız bitmiş ola bilər.");
-        } else {
-          console.error("Mesajlar yüklənərkən xəta baş verdi:", err);
-        }
+        console.error("Mesajlar yüklənərkən xəta baş verdi:", err);
       });
-  }, [receiverId]);
-
-  useEffect(() => {
-    const connect = async () => {
-      try {
-        if (connection.state === "Disconnected") {
-          await connection.start();
-        }
-
-        connection.off("ReceiveMessage");
-
-        connection.on("ReceiveMessage", (msg) => {
-          if (msg.senderId === receiverId || msg.receiverId === receiverId) {
-            setMessages((prev) => [
-              ...prev,
-              {
-                content: msg.message,
-                createdAt: msg.sentAt,
-                self: msg.senderId === currentUserId,
-              },
-            ]);
-            setAutoScroll(true); // ✅ yeni mesaj gələndə scroll elə
-          }
-        });
-      } catch (err) {
-        console.error("SignalR bağlantı xətası:", err);
-      }
-    };
-
-    connect();
-    return () => {
-      connection.off("ReceiveMessage");
-    };
   }, [receiverId]);
 
   useEffect(() => {
     if (autoScroll) {
       chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-      setAutoScroll(false); // bir dəfəlik scroll et
+      setAutoScroll(false);
     }
   }, [messages, autoScroll]);
 
   const sendMessage = async () => {
-    if (!input.trim() || connection.state !== "Connected") return;
+    if (!input.trim()) return;
     try {
+      const connection = (await import("../../../sockets/chatHub")).default;
+      if (connection.state !== "Connected") await connection.start();
+
       await connection.invoke("SendMessage", receiverId, input);
       setInput("");
     } catch (err) {
       console.error("SendMessage xətası:", err);
     }
   };
+  useEffect(() => {
+  const setupSignalR = async () => {
+    if (connection.state === "Disconnected") {
+      await connection.start();
+    }
+
+    connection.off("ReceiveMessage"); // təmizləyirik
+    connection.on("ReceiveMessage", (msg) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          content: msg.message,
+          createdAt: msg.sentAt,
+          self: msg.senderId === currentUserId,
+        },
+      ]);
+      setAutoScroll(true);
+    });
+  };
+
+  setupSignalR();
+  return () => {
+    connection.off("ReceiveMessage");
+  };
+}, [receiverId]);
+
+useEffect(() => {
+  if (receiverId) {
+    dispatch(setCurrentReceiverId(receiverId));
+  }
+
+  return () => {
+    dispatch(clearCurrentReceiverId());
+  };
+}, [receiverId]);
+
 
   return (
     <div className="chat-window">
-      <div className="chat-header" style={{marginTop:"70px",marginLeft:"20px"}}>{receiverName}</div>
+      <div className="chat-header" style={{ marginTop: "70px", marginLeft: "20px" }}>
+        {receiverName}
+      </div>
 
       <div className="chat-messages">
         {messages.length === 0 && (
-          <div className="empty-message">
-            Hələ mesaj yoxdur. Danışmağa başla!
-          </div>
+          <div className="empty-message">Hələ mesaj yoxdur. Danışmağa başla!</div>
         )}
 
         {messages.map((m, i) => (
           <div className={`chat-message ${m.self ? "self" : ""}`} key={i}>
             {!m.self && (
-              <img
-                src={receiverAvatar || "/default-avatar.png"}
-                alt="avatar"
-                className="avatar"
-              />
+              <img src={receiverAvatar || "/default-avatar.png"} alt="avatar" className="avatar" />
             )}
             <div className="message-bubble">
               <div>{m.content}</div>
               <div className="message-time">
-                {new Date(m.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </div>
             </div>
           </div>

@@ -58,9 +58,7 @@ const Users = () => {
                   </p>
                 </div>
 
-                <div className="status-badge user-status">
-                  <FaCheckCircle className="check" /> Təsdiqlənmiş
-                </div>
+                
               </div>
             );
           })}

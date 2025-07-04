@@ -28,7 +28,7 @@ const DarkMode = () => {
       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
     >
-      {dark ? <Moon size={30} /> : <Sun size={30} />}
+      {dark ? <Moon size={26} /> : <Sun size={28} />}
     </button>
   );
 };

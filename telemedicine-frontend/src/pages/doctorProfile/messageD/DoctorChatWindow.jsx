@@ -1,24 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import connection from "../../../sockets/chatHub";
 import { getMessagesWithUser } from "../../../services/chatService";
 import { jwtDecode } from "jwt-decode";
 import "./chat.css";
+import connection from "../../../sockets/chatHub";
+import { useDispatch } from "react-redux";
+import { setCurrentReceiverId,clearCurrentReceiverId } from "../../../redux/slice/chatSlice";
 
 const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [autoScroll, setAutoScroll] = useState(false); // ✅ scroll kontrolu
+  const [autoScroll, setAutoScroll] = useState(false);
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
-  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
 
+  const token = localStorage.getItem("token");
   let currentUserId = null;
   if (token) {
     const decoded = jwtDecode(token);
-    currentUserId =
-      decoded[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-      ];
+    currentUserId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
   }
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
           self: m.senderId === currentUserId,
         }));
         setMessages(formatted);
-        setAutoScroll(false); // ❌ yeni pasiyent seçiləndə scroll etmə
+        setAutoScroll(false);
       })
       .catch((err) => {
         console.error("Mesajlar yüklənərkən xəta baş verdi:", err);
@@ -44,53 +44,60 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   }, [receiverId]);
 
   useEffect(() => {
-    const connect = async () => {
-      try {
-        if (connection.state === "Disconnected") {
-          await connection.start();
-        }
-
-        connection.off("ReceiveMessage");
-        connection.on("ReceiveMessage", (msg) => {
-          if (msg.senderId === receiverId || msg.receiverId === receiverId) {
-            setMessages((prev) => [
-              ...prev,
-              {
-                content: msg.message,
-                createdAt: msg.sentAt,
-                self: msg.senderId === currentUserId,
-              },
-            ]);
-            setAutoScroll(true); // ✅ yeni mesaj gələndə scroll et
-          }
-        });
-      } catch (err) {
-        console.error("SignalR bağlantı xətası:", err);
-      }
-    };
-
-    connect();
-    return () => {
-      connection.off("ReceiveMessage");
-    };
-  }, [receiverId]);
-
-  useEffect(() => {
     if (autoScroll) {
       chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-      setAutoScroll(false); // ✅ yalnız bir dəfə scroll et
+      setAutoScroll(false);
     }
   }, [messages, autoScroll]);
 
   const sendMessage = async () => {
-    if (!input.trim() || connection.state !== "Connected") return;
+    if (!input.trim()) return;
     try {
+      const connection = (await import("../../../sockets/chatHub")).default;
+      if (connection.state !== "Connected") await connection.start();
+
       await connection.invoke("SendMessage", receiverId, input);
       setInput("");
     } catch (err) {
       console.error("SendMessage xətası:", err);
     }
   };
+useEffect(() => {
+  const setupSignalR = async () => {
+    if (connection.state === "Disconnected") {
+      await connection.start();
+    }
+
+    connection.off("ReceiveMessage"); // təmizləyirik
+    connection.on("ReceiveMessage", (msg) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          content: msg.message,
+          createdAt: msg.sentAt,
+          self: msg.senderId === currentUserId,
+        },
+      ]);
+      setAutoScroll(true);
+    });
+  };
+
+  setupSignalR();
+  return () => {
+    connection.off("ReceiveMessage");
+  };
+}, [receiverId]);
+
+useEffect(() => {
+  if (receiverId) {
+    dispatch(setCurrentReceiverId(receiverId));
+  }
+
+  return () => {
+    dispatch(clearCurrentReceiverId());
+  };
+}, [receiverId]);
+
 
   return (
     <div className="chat-window">
@@ -100,27 +107,18 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
 
       <div className="chat-messages">
         {messages.length === 0 && (
-          <div className="empty-message">
-            Hələ mesaj yoxdur. Danışmağa başla!
-          </div>
+          <div className="empty-message">Hələ mesaj yoxdur. Danışmağa başla!</div>
         )}
 
         {messages.map((m, i) => (
           <div className={`chat-message ${m.self ? "self" : ""}`} key={i}>
             {!m.self && (
-              <img
-                src={receiverAvatar || "/default-avatar.png"}
-                alt="avatar"
-                className="avatar"
-              />
+              <img src={receiverAvatar || "/default-avatar.png"} alt="avatar" className="avatar" />
             )}
             <div className="message-bubble">
               <div>{m.content}</div>
               <div className="message-time">
-                {new Date(m.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </div>
             </div>
           </div>

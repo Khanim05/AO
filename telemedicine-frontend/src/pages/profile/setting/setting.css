@@ -10,7 +10,7 @@
   text-align: center;
 }
 
-/* Başlıq */
+
 .setting-container h2 {
   font-size: 20px;
   font-weight: 700;
@@ -18,7 +18,7 @@
   margin-bottom: 2.5rem;
 }
 
-/* Profil şəkli */
+
 .profile-section {
   margin-bottom: 2rem;
 }
@@ -42,7 +42,7 @@
   box-shadow: 0 0 20px rgba(15, 98, 254, 0.25);
 }
 
-/* Grid form sahələri */
+
 .input-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -82,7 +82,6 @@
   box-shadow: inset 0 0 0 2px #0f62fe;
 }
 
-/* Submit button */
 .setting-form button {
   margin-top: 2rem;
   padding: 1rem 2rem;
@@ -96,27 +95,24 @@
   box-shadow: 0 6px 20px rgba(15, 98, 254, 0.25);
   transition: background 0.3s ease, transform 0.2s ease;
 }
-/* ========================= */
-/*        DARK MODE         */
-/* ========================= */
+
 body.dark .setting-container {
   background-color: #1e1e1e;
   color: #e0e0e0;
   box-shadow: 0 12px 40px rgba(255, 255, 255, 0.03);
 }
 
-/* Başlıq */
+
 body.dark .setting-container h2 {
   color: #f1f1f1;
 }
 
-/* Profil şəkli */
+
 body.dark .profile-img {
   border: 4px solid #40a9ff;
   box-shadow: 0 0 25px rgba(64, 169, 255, 0.4);
 }
 
-/* Etiketlər və input qutuları */
 body.dark .input-grid label {
   background: #2a2a2a;
   color: #ddd;
@@ -134,7 +130,7 @@ body.dark .input-grid input:focus {
   box-shadow: inset 0 0 0 2px #40a9ff;
 }
 
-/* Submit düyməsi */
+
 body.dark .setting-form button {
   background: linear-gradient(to right, #40a9ff, #1e8de2);
   color: white;
@@ -150,7 +146,6 @@ body.dark .setting-form button:hover {
   transform: translateY(-2px);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .input-grid {
     grid-template-columns: 1fr;

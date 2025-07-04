@@ -4,7 +4,7 @@
   background-color: #f9f9f9;
 }
 
-/* === SIDEBAR === */
+
 .profile-sidebar {
   margin-top: 60px;
   width: 240px;
@@ -13,7 +13,7 @@
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
-  position: fixed; /* 👈 əlavə etdik */
+  position: fixed; 
   top: 0;
   left: 0;
   bottom: 0;
@@ -75,12 +75,12 @@
   background-color: #ffe6e6;
 }
 
-/* === MAIN CONTENT === */
+
 .profile-main {
   flex: 1;
   padding: 2rem;
   overflow-x: hidden;
-  margin-left: 240px; /* 👈 sidebar genişliyi qədər boşluq */
+  margin-left: 240px;
 }
 
 .profile-content {
@@ -88,12 +88,10 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding-bottom: 40px; /* footer ilə toqquşmasın deyə */
+  padding-bottom: 40px; 
    justify-content: flex-start;
 }
-/* ========================= */
-/*        DARK MODE         */
-/* ========================= */
+
 body.dark {
   background-color: #121212;
   color: #e0e0e0;
@@ -159,7 +157,7 @@ body.dark .btn-video:hover {
 }
 
 
-/* === RESPONSIVE (Mobile) === */
+
 @media (max-width: 768px) {
   .profile-layout {
     margin-top: 20px;
@@ -167,7 +165,7 @@ body.dark .btn-video:hover {
   }
 
     .profile-sidebar {
-    position: static; /* 👈 fixed olmasın */
+    position: static; 
     width: 100%;
     height: auto;
   }
@@ -190,7 +188,7 @@ body.dark .btn-video:hover {
     gap: 10px;
   }
    .profile-main {
-    margin-left: 0; /* 👈 boşluq silinsin */
+    margin-left: 0; 
   }
 
   .profile-nav a:hover {

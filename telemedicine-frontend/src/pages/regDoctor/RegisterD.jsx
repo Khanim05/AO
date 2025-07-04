@@ -23,7 +23,7 @@ const [formData, setFormData] = useState(() => {
     Password: "",
     ConfirmPassword: ""
   });
-  return { ...stored, ProfileImage: null }; // Şəkli heç vaxt localStorage-dən gətirmə
+  return { ...stored, ProfileImage: null }; 
 });
 
   useEffect(() => {

@@ -56,7 +56,7 @@ const StepDoctor = ({ nextStep, setFormData, formData }) => {
           <div className="glass-right">
             <h2>Həkim Qeydiyyatı</h2>
             <form onSubmit={formik.handleSubmit} className="glass-form">
-              {/* Name */}
+              
               <div className="input-group">
                 <label>Ad</label>
                 <input
@@ -77,7 +77,7 @@ const StepDoctor = ({ nextStep, setFormData, formData }) => {
                 )}
               </div>
 
-              {/* Surname */}
+              
               <div className="input-group">
                 <label>Soyad</label>
                 <input
@@ -98,7 +98,7 @@ const StepDoctor = ({ nextStep, setFormData, formData }) => {
                 )}
               </div>
 
-              {/* Email */}
+         
               <div className="input-group">
                 <label>Email</label>
                 <input
@@ -119,7 +119,7 @@ const StepDoctor = ({ nextStep, setFormData, formData }) => {
                 )}
               </div>
 
-              {/* BirthDate */}
+             
               <div className="input-group">
                 <label>Doğum Tarixi</label>
                 <DatePicker

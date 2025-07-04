@@ -78,7 +78,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="dashboard-header">
-        <h2>Dashboard</h2>
+        <h2>İdarə Paneli</h2>
         <div className="avatar top-avatar">A</div>
       </div>
 

@@ -11,8 +11,8 @@ const Setting = () => {
     surname: "",
     birthDate: "",
     email: "",
-    imgUrl: "", // Preview üçün
-    profileImageFile: null, // Backend üçün fayl
+    imgUrl: "",
+    profileImageFile: null, 
   });
 
   const [loading, setLoading] = useState(true);
@@ -61,8 +61,8 @@ const Setting = () => {
 
     setFormData((prev) => ({
       ...prev,
-      imgUrl: URL.createObjectURL(file), // preview
-      profileImageFile: file, // backend üçün göndəriləcək fayl
+      imgUrl: URL.createObjectURL(file),
+      profileImageFile: file, 
     }));
   };
 
@@ -74,7 +74,7 @@ const Setting = () => {
 
     form.append("Name", formData.name);
     form.append("Surname", formData.surname);
-    form.append("BirthDate", formData.birthDate); // format: YYYY-MM-DD
+    form.append("BirthDate", formData.birthDate); 
 
     if (formData.profileImageFile) {
       form.append("ProfileImage", formData.profileImageFile);
@@ -95,6 +95,7 @@ const Setting = () => {
           },
         }
       );
+      console.log(res.data)
 
       toast.success("Profil məlumatları uğurla yeniləndi.");
     } catch (err) {

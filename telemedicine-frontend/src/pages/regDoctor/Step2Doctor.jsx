@@ -50,7 +50,7 @@ const Step2Doctor = ({ nextStep, prevStep, updateFormData, formData }) => {
         <div className="glass-right">
           <h2>Həkim Qeydiyyatı (2/3)</h2>
           <form onSubmit={formik.handleSubmit} className="glass-form">
-            {/* Kateqoriya */}
+          
             <div className="input-group">
               <label>Kateqoriya</label>
               <select
@@ -78,7 +78,7 @@ const Step2Doctor = ({ nextStep, prevStep, updateFormData, formData }) => {
               )}
             </div>
 
-            {/* Təcrübə ili */}
+           
             <div className="input-group">
               <label>Təcrübə (il)</label>
               <input
@@ -99,7 +99,7 @@ const Step2Doctor = ({ nextStep, prevStep, updateFormData, formData }) => {
               )}
             </div>
 
-            {/* Şifrə */}
+            
             <div className="input-group">
               <label>Şifrə</label>
               <input
@@ -120,7 +120,7 @@ const Step2Doctor = ({ nextStep, prevStep, updateFormData, formData }) => {
               )}
             </div>
 
-            {/* Təsdiqlə */}
+           
             <div className="input-group">
               <label>Təsdiq Şifrə</label>
               <input
