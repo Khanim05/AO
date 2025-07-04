@@ -22,7 +22,15 @@ const VideoCall = (props) => {
       typeof props.roomId === "object"
         ? props.roomId?.id
         : props.roomId ?? location.state?.appointmentId ?? params.roomId;
+  const appointmentId = useMemo(() => {
+    const rawId =
+      typeof props.roomId === "object"
+        ? props.roomId?.id
+        : props.roomId ?? location.state?.appointmentId ?? params.roomId;
 
+    const parsed = Number(rawId);
+    return isNaN(parsed) ? null : parsed;
+  }, [props.roomId, location.state, params.roomId]);
     const parsed = Number(rawId);
     return isNaN(parsed) ? null : parsed;
   }, [props.roomId, location.state, params.roomId]);
@@ -37,6 +45,10 @@ const VideoCall = (props) => {
   const connectionRef = useRef(null);
   const peerConnections = useRef({});
 
+  // 🗓 Optional: Görüş mövcudluğunu yoxla
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token || !appointmentId) return;
   // Görüş ID-si ilə görüşü yoxla (lazımdırsa başqa məqsədlə istifadə edə bilərsən)
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -58,12 +70,28 @@ const VideoCall = (props) => {
       .catch((err) => {
         console.error("🛑 Schedule API xətası:", err);
       });
+  }, [appointmentId]);
+
+  // 🧠 WebRTC + SignalR bağlantısı
+    axios
+      .get("https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/patient", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const appointment = res.data.find((a) => a.id === appointmentId);
+        if (!appointment) {
+          console.warn("❗ Görüş tapılmadı:", appointmentId);
+        }
+      })
+      .catch((err) => {
+        console.error("🛑 Schedule API xətası:", err);
+      });
   }, [props.roomId, location.state, params.roomId]);
 
   // WebRTC + SignalR bağlantısı
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token || !roomId) return;
 
     const connection = createVideoSignalConnection(token);
     connectionRef.current = connection;
@@ -77,7 +105,7 @@ const VideoCall = (props) => {
       .getUserMedia({ video: true, audio: true })
       .then((localStream) => {
         setStream(localStream);
-        userVideo.current.srcObject = localStream;
+        if (userVideo.current) userVideo.current.srcObject = localStream;
 
         connection.on("AllUsers", (users) => {
           users.forEach((userId) => createOffer(userId, localStream));
@@ -92,24 +120,32 @@ const VideoCall = (props) => {
         });
 
         connection.on("ReceiveAnswer", async (fromId, answerStr) => {
-          await peerConnections.current[fromId]?.setRemoteDescription(
-            new RTCSessionDescription(JSON.parse(answerStr))
-          );
+          const pc = peerConnections.current[fromId];
+          if (pc) {
+            await pc.setRemoteDescription(
+              new RTCSessionDescription(JSON.parse(answerStr))
+            );
+          }
         });
 
         connection.on("ReceiveIceCandidate", async (fromId, candidateStr) => {
-          await peerConnections.current[fromId]?.addIceCandidate(
-            new RTCIceCandidate(JSON.parse(candidateStr))
-          );
+          const pc = peerConnections.current[fromId];
+          if (pc) {
+            await pc.addIceCandidate(
+              new RTCIceCandidate(JSON.parse(candidateStr))
+            );
+          }
         });
       });
 
     return () => {
       Object.values(peerConnections.current).forEach((pc) => pc.close());
-      connectionRef.current?.stop();
+      peerConnections.current = {};
+      connection.stop();
     };
   }, [roomId]);
 
+  // 🔧 Peer yarat
   const createPeer = (userId) => {
     const peer = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -127,7 +163,7 @@ const VideoCall = (props) => {
 
     peer.ontrack = (event) => {
       const [remoteStream] = event.streams;
-      if (remoteStream && partnerVideo.current) {
+      if (partnerVideo.current && remoteStream) {
         partnerVideo.current.srcObject = remoteStream;
       }
     };
@@ -138,9 +174,7 @@ const VideoCall = (props) => {
   const createOffer = async (toId, localStream) => {
     const peer = createPeer(toId);
     peerConnections.current[toId] = peer;
-    localStream
-      .getTracks()
-      .forEach((track) => peer.addTrack(track, localStream));
+    localStream.getTracks().forEach((track) => peer.addTrack(track, localStream));
     const offer = await peer.createOffer();
     await peer.setLocalDescription(offer);
     connectionRef.current?.invoke("SendOffer", toId, JSON.stringify(offer));
@@ -149,9 +183,7 @@ const VideoCall = (props) => {
   const createAnswer = async (fromId, localStream, offer) => {
     const peer = createPeer(fromId);
     peerConnections.current[fromId] = peer;
-    localStream
-      .getTracks()
-      .forEach((track) => peer.addTrack(track, localStream));
+    localStream.getTracks().forEach((track) => peer.addTrack(track, localStream));
     await peer.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await peer.createAnswer();
     await peer.setLocalDescription(answer);
@@ -159,16 +191,12 @@ const VideoCall = (props) => {
   };
 
   const handleToggleMic = () => {
-    stream
-      ?.getAudioTracks()
-      .forEach((track) => (track.enabled = !track.enabled));
+    stream?.getAudioTracks().forEach((track) => (track.enabled = !track.enabled));
     setIsMicOn((prev) => !prev);
   };
 
   const handleToggleCam = () => {
-    stream
-      ?.getVideoTracks()
-      .forEach((track) => (track.enabled = !track.enabled));
+    stream?.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
     setIsCamOn((prev) => !prev);
   };
 
@@ -177,6 +205,7 @@ const VideoCall = (props) => {
   return (
     <div className="video-call-container">
       <video ref={partnerVideo} autoPlay playsInline className="remote-video" />
+      <video ref={userVideo} autoPlay playsInline muted className="local-video" />
       <video
         ref={userVideo}
         autoPlay
@@ -198,13 +227,11 @@ const VideoCall = (props) => {
       </div>
 
       {showConfirmModal && (
-        <div
-          className="custom-backdrop"
-          onClick={() => setShowConfirmModal(false)}
-        >
+        <div className="custom-backdrop" onClick={() => setShowConfirmModal(false)}>
           <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
             <h3>Görüşdən çıxmaq istəyirsiniz?</h3>
             <div className="custom-modal-buttons">
+              <button onClick={() => setShowConfirmModal(false)}>Ləğv et</button>
               <button onClick={() => setShowConfirmModal(false)}>Ləğv et</button>
               <button
                 className="leave"
