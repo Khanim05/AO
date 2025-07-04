@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./appoint.css";
+import { ToastContainer, toast } from 'react-toastify';
 
 const statusMap = {
   0: "Gözləmədə",
@@ -75,7 +76,7 @@ const AppointP = () => {
       // const canJoinRes = { data: true }; // <=== YALNIZ TEST ÜÇÜN!
 
       if (!canJoinRes.data) {
-        alert("Hələ görüş vaxtı çatmayıb və ya artıq keçib.");
+      toast.info("Hələ görüş vaxtı çatmayıb və ya artıq keçib.");
         return;
       }
 
@@ -208,6 +209,7 @@ const AppointP = () => {
           )}
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };
