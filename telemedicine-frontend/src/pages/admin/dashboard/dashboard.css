@@ -103,3 +103,98 @@ body.dark .stat p {
 .statsChart{
     margin-top: 90px;
 }
+
+.price-setting-box {
+  margin-top: 24px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  max-width: 300px;
+}
+
+.price-setting-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.price-setting-box input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.price-save-btn {
+  background: #0f62fe;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+}
+
+.price-save-btn:hover {
+  background: #0b50c3;
+}
+
+/* Dark mode üçün */
+body.dark .price-setting-box {
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+}
+
+body.dark .price-setting-box label {
+  color: #f1f1f1;
+}
+
+body.dark .price-setting-box input {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark .price-save-btn {
+  background: #007bff;
+}
+
+body.dark .price-save-btn:hover {
+  background: #0056b3;
+}
+.stat.purple svg {
+  background-color: #9b59b6;
+}
+
+.price-input-wrapper {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.price-input-wrapper input {
+  width: 80px;
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.price-input-wrapper button {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.price-input-wrapper button:hover {
+  background-color: #0056b3;
+}
+

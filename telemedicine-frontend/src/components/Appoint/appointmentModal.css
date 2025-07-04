@@ -5,21 +5,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 350px 20px;
+  overflow-y: auto;
   z-index: 999;
 }
 
 .modal-content {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(15px);
   border-radius: 16px;
-  width: 420px;
-  max-height: 90vh;
-  overflow-y: auto;
+  width: 440px;
+  max-height: 95vh;
+  overflow: visible !important;
   padding: 2rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  position: relative;
   animation: fadeIn 0.3s ease-in-out;
-  overflow: visible !important; /* Əsas düzəliş */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative !important;
 }
 
 @keyframes fadeIn {
@@ -38,25 +42,34 @@
   color: #333;
 }
 
-h3, h4 {
-  margin-bottom: 10px;
-  font-weight: 600;
-  color: #222;
-}
-
 .react-datepicker-wrapper {
   width: 100%;
-  margin-bottom: 1rem;
 }
 
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  transition: border-color 0.2s ease-in-out;
+}
+
+.react-datepicker__input-container input:focus {
+  border-color: #007bff;
+}
+
+/* Saat seçimləri */
 .slots-container {
-  max-height: 260px;
+  max-height: 220px;
   overflow-y: auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-top: 0.5rem;
   padding-right: 5px;
+  margin-bottom: 1rem;
 }
 
 .slot-btn {
@@ -79,6 +92,7 @@ h3, h4 {
   font-weight: 600;
 }
 
+/* Davam et buttonu */
 .confirm-btn {
   width: 100%;
   margin-top: 20px;
@@ -97,79 +111,34 @@ h3, h4 {
   background: linear-gradient(to right, #218838, #1e7e34);
 }
 
-.confirmation-message {
-  text-align: center;
+.react-datepicker-popper {
+  z-index: 9999 !important;
 }
 
-.confirmation-message p {
-  font-weight: 600;
-  color: #155724;
-  background-color: #d4edda;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-}
-.react-datepicker-wrapper {
-  width: 100%;
+.react-datepicker__day--disabled {
+  color: #ccc !important;
+  cursor: not-allowed;
 }
 
-.react-datepicker__input-container input {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-  transition: border-color 0.2s ease-in-out;
-}
-
-.react-datepicker__input-container input:focus {
-  border-color: #007bff;
-}
-.modal-content {
-  padding: 2rem 1.5rem;
-  width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.react-datepicker__day--disabled:hover {
+  background-color: transparent !important;
 }
 
 /* ============================== */
 /*         DARK MODE             */
 /* ============================== */
+
 body.dark .modal-content {
-  background: rgba(30, 30, 30, 0.9);
+  background: rgba(30, 30, 30, 0.95);
   backdrop-filter: blur(18px);
   box-shadow: 0 10px 25px rgba(255, 255, 255, 0.05);
   color: #f1f1f1;
 }
 
-body.dark h3,
-body.dark h4 {
-  color: #f1f1f1;
-}
-
-body.dark .close-btn {
-  color: #ccc;
-}
-
-body.dark .slot-btn {
-  background-color: #2a2a2a;
-  border: 1px solid #444;
-  color: #e0e0e0;
-}
-
-body.dark .slot-btn:hover {
-  background-color: #004080;
-  color: white;
-}
-
-body.dark .slot-btn.selected {
-  background-color: #007bff;
-  color: white;
-  font-weight: 600;
-}
+body.dark .close-btn { color: #ccc; }
+body.dark .slot-btn { background-color: #2a2a2a; border: 1px solid #444; color: #e0e0e0; }
+body.dark .slot-btn:hover { background-color: #004080; color: white; }
+body.dark .slot-btn.selected { background-color: #007bff; color: white; }
 
 body.dark .confirm-btn {
   background: linear-gradient(to right, #2ecc71, #27ae60);
@@ -180,13 +149,6 @@ body.dark .confirm-btn:hover {
   background: linear-gradient(to right, #27ae60, #229954);
 }
 
-body.dark .confirmation-message p {
-  background-color: #234c36;
-  color: #a7f3c3;
-  border: 1px solid #1e7e34;
-}
-
-/* React Datepicker input */
 body.dark .react-datepicker__input-container input {
   background-color: #2a2a2a;
   color: #f1f1f1;
@@ -194,59 +156,6 @@ body.dark .react-datepicker__input-container input {
   box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
 }
 
-body.dark .react-datepicker__input-container input:focus {
-  border-color: #40a9ff;
-}
-.confirm-wrapper {
-  position: sticky;
-  bottom: 0;
-  background: white;
-  padding-top: 1rem;
-  margin-top: 1rem;
-  border-top: 1px solid #eee;
-}
-
-/* 🌙 Dark Mode */
-body.dark .confirm-wrapper {
-  background: #1e1e1e;
-  border-top: 1px solid #444;
-}
-/* react-datepicker dark override */
-/* .react-datepicker {
-  background-color: #1e1e1e !important;
-  color: #f1f1f1 !important;
-  border: 1px solid #333 !important;
-} */
-
-/* .react-datepicker__header {
-  background-color: #1a1a1a !important;
-  border-bottom: 1px solid #333 !important;
-} */
-
-/* .react-datepicker__day,
-.react-datepicker__day-name,
-.react-datepicker__current-month {
-  color: #f1f1f1 !important;
-} */
-
-/* .react-datepicker__day--selected,
-.react-datepicker__day--keyboard-selected {
-  background-color: #007bff !important;
-  color: white !important;
-} */
-
-/* .react-datepicker__day:hover {
-  background-color: #333 !important;
-} */
-/* Keçmiş günlər */
-body.dark .react-datepicker__day--disabled {
-  color: #666 !important;
-  background-color: transparent !important;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* DARK MODE - React Datepicker Styling */
 body.dark .react-datepicker {
   background-color: #1e1e1e !important;
   color: #f1f1f1 !important;
@@ -259,52 +168,91 @@ body.dark .react-datepicker__header {
 }
 
 body.dark .react-datepicker__current-month,
-body.dark .react-datepicker__day-name {
-  color: #f1f1f1 !important;
-}
-
-/* Günlər */
+body.dark .react-datepicker__day-name,
 body.dark .react-datepicker__day {
   color: #f1f1f1 !important;
-  background-color: transparent !important;
 }
 
-/* Seçilmiş gün */
 body.dark .react-datepicker__day--selected,
 body.dark .react-datepicker__day--keyboard-selected {
   background-color: #007bff !important;
   color: white !important;
 }
 
-/* Hover effekti */
 body.dark .react-datepicker__day:hover {
   background-color: #2a2a2a !important;
-  color: white !important;
 }
 
-/* Bugünkü gün */
-body.dark .react-datepicker__day--today {
-  border: 1px solid #40a9ff !important;
+.dark .react-datepicker__day--disabled {
+  color: #555 !important;
+  background-color: transparent !important;
+  cursor: not-allowed;
+}
+/* ✅ Modern Success Check */
+.circle-loader {
+  border: 4px solid rgba(0,0,0,0.1);
+  border-left-color: #4caf50;
+  animation: loader-spin 1s linear infinite;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  margin: 15px auto;
+  position: relative;
 }
 
-/* Seçilə bilən günlər */
-body.dark .react-datepicker__day {
-  color: #f1f1f1;
-  background-color: transparent;
+.circle-loader.success {
+  border-color: #4caf50;
+  animation: none;
 }
 
-/* Hover effekti */
-body.dark .react-datepicker__day:hover {
-  background-color: #2a2a2a;
+.circle-loader.success .checkmark {
+  display: block;
 }
 
-/* Seçilmiş gün */
-body.dark .react-datepicker__day--selected {
-  background-color: #007bff;
-  color: white;
+.checkmark {
+  display: none;
+  width: 20px;
+  height: 40px;
+  border-right: 5px solid #4caf50;
+  border-bottom: 5px solid #4caf50;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 10px;
+  left: 22px;
+  animation: checkmark 0.5s ease-out forwards;
 }
 
-/* Bu gün */
-body.dark .react-datepicker__day--today {
-  border: 1px solid #40a9ff;
+@keyframes loader-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes checkmark {
+  0% { height: 0; width: 0; opacity: 0; }
+  100% { height: 40px; width: 20px; opacity: 1; }
+}
+
+/* Optional dark mode */
+body.dark .circle-loader {
+  border-left-color: #2ecc71;
+}
+body.dark .checkmark {
+  border-color: #2ecc71;
+}
+
+.modern-success p {
+  text-align: center;
+  font-size: 16px;
+  animation: fadeInText 1s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInText {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes checkmark {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  100% { transform: scale(1) rotate(45deg); opacity: 1; }
 }

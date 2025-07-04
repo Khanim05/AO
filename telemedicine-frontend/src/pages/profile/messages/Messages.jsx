@@ -14,7 +14,7 @@ const Messages = () => {
   return (
     <div className="messages-container">
       <div className="chatDoctor-sidebar">
-        <h3>Həkimlər</h3>
+        <h5>Həkimlər</h5>
         <ul className="doctor-list">
           {doctors.map((doctor) => (
             <li

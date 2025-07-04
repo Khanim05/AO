@@ -22,7 +22,7 @@
   gap: 40px;
 }
 
-.doctor-item {
+.doctor-item-about {
   display: flex;
   background: #ffffff;
   padding: 30px;
@@ -32,7 +32,7 @@
   transition: transform 0.3s ease;
 }
 
-.doctor-item:hover {
+.doctor-item-about:hover {
   transform: translateY(-4px);
 }
 
@@ -131,7 +131,7 @@ body.dark .section-heading {
   color: #ffffff;
 }
 
-body.dark .doctor-item {
+body.dark .doctor-item-about {
   background: linear-gradient(to right, #121212, #1a1a1a);
   box-shadow: 0 0 24px rgba(255, 255, 255, 0.03);
 }
@@ -158,7 +158,7 @@ body.dark .book-btn:hover {
 
 /* 📱 RESPONSIVE */
 @media (max-width: 1024px) {
-  .doctor-item {
+  .doctor-item-about {
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -204,3 +204,11 @@ body.dark .book-btn:hover {
     font-size: 14px;
   }
 }
+
+.book-btn.disabled,
+.start-chat-btn.disabled {
+  opacity: 0.6;
+  pointer-events: auto; /* click gets through */
+  cursor: not-allowed;
+}
+

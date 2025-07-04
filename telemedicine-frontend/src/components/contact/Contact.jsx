@@ -60,7 +60,7 @@ const handleCaptcha = (token) => {
         "https://khamiyevbabek-001-site1.ktempurl.com/api/Contact",
         formData
       );
-      toast.success("Mesaj uğurla göndərildi ✅");
+      toast.success("Mesaj uğurla göndərildi");
       setFormData({ name: "", email: "", subject: "", message: "" });
       captchaTokenRef.current = null;
     } catch (err) {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast,ToastContainer } from "react-toastify";
 import { useState } from "react";
 import "./step3D.css";
 
@@ -96,6 +96,7 @@ const Step3Doctor = ({ prevStep, formData, setFormData }) => {
           Təsdiqlə və tamamla
         </button>
       </div>
+      <ToastContainer/>
     </form>
   );
 };

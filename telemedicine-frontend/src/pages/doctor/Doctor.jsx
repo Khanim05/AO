@@ -1,4 +1,3 @@
-// ✅ doctor.jsx (tam duzeldilmis versiya)
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
@@ -7,7 +6,7 @@ import ChatModal from "../../components/chatModal/ChatModal";
 import Footer from "../../components/footer/Footer";
 import { jwtDecode } from "jwt-decode";
 import AppointmentModal from "../../components/Appoint/AppointmenModal";
-
+import { toast,ToastContainer } from "react-toastify";
 const Doctor = () => {
   const [selectedDoctorForChat, setSelectedDoctorForChat] = useState(null);
   const [selectedDoctorForAppointment, setSelectedDoctorForAppointment] =
@@ -16,8 +15,7 @@ const Doctor = () => {
   const [userRole, setUserRole] = useState(null);
   const location = useLocation();
   const highlightedDoctorId = location.state?.highlightedDoctorId;
-  console.log("🔍 Gələn doctor ID:", highlightedDoctorId);
-  const cardRefs = useRef({}); // həkim kartları üçün ref-lər
+  const cardRefs = useRef({});
 
   useEffect(() => {
     axios
@@ -41,13 +39,13 @@ const Doctor = () => {
       const el = cardRefs.current[highlightedDoctorId];
       if (el) {
         setTimeout(() => {
-           el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
           el.classList.add("highlight-doctor");
 
           setTimeout(() => {
             el.classList.remove("highlight-doctor");
           }, 3000);
-        }, 100); // DOM render bitdikdən sonra
+        }, 100);
       }
     }
   }, [highlightedDoctorId, doctors]);
@@ -61,7 +59,7 @@ const Doctor = () => {
             <div
               key={doctor.id}
               ref={(el) => (cardRefs.current[doctor.userId] = el)}
-              className="doctor-item"
+              className="doctor-item-about"
             >
               <img
                 src={doctor.imgUrl}
@@ -78,6 +76,27 @@ const Doctor = () => {
                 <p className="doctor-license">
                   <strong>Təcrübə ili:</strong> {doctor.licenseNumber}
                 </p>
+                {!userRole && (
+                  <>
+                    <button
+                      className="book-btn disabled"
+                      onClick={() =>
+                        toast.info("Görüş təyin etmək üçün daxil olun.")
+                      }
+                    >
+                      Görüş təyin et
+                    </button>
+                    <button
+                      className="start-chat-btn disabled"
+                      onClick={() =>
+                        toast.info("Söhbət etmək üçün daxil olun.")
+                      }
+                    >
+                      💬 Söhbətə başla
+                    </button>
+                  </>
+                )}
+
                 {userRole === "Patient" && (
                   <>
                     <button
@@ -116,6 +135,7 @@ const Doctor = () => {
       )}
 
       <Footer />
+      <ToastContainer/>
     </div>
   );
 };

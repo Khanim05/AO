@@ -6,91 +6,91 @@ body,
   padding: 0;
 }
 
-/* Ümumi konteyner */
 .messages-container {
   display: flex;
-  background: #fff;
-  height: 100vh;
+  flex-direction: row;
   width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
-/* Sidebar (Həkim siyahısı) */
 .chatDoctor-sidebar {
-  margin-top: 56px;
-  width: 250px;
-  background: #f9f9f9;
+  margin-top: 50px;
+  width: 260px;
+  background-color: #f9f9f9;
   border-right: 1px solid #ddd;
-  padding: 16px 0;
+  padding: 16px;
   overflow-y: auto;
 }
 
-.chatDoctor-sidebar h3 {
-  font-size: 18px;
-  font-weight: 600;
-  padding: 0 20px 10px;
-  color: #333;
-}
-
-.doctor-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.doctor-item {
-  margin: 6px 10px;
-  border-radius: 12px;
-  padding: 10px 16px;
-  transition: 0.2s;
-}
-
-.doctor-item:hover,
-.doctor-item.selected {
-  background: #2e63f5;
-  color: rgb(0, 0, 0);
-}
-
-.doctor-item img {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Chat Panel */
 .chat-window {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  flex: 1;
   overflow: hidden;
 }
 
-/* Həkimin adı */
 .chat-header {
-  padding: 20px 30px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--primary-color);
   font-size: 18px;
-  border-bottom: 1px solid #eee;
-  color: #333;
-  background: #fff;
-  font-family: Poppins;
+  font-weight: 800;
+  background: linear-gradient(to right, #0f62fe, #004db3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 2rem 0;
+  animation: fadeInUp 0.6s ease forwards;
+  letter-spacing: 0.5px;
+   text-shadow: 0 0 0px #0b4779, 0 0 5px #034373;
 }
 
-/* Mesaj siyahısı */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  min-height: 0; /* Bu olmadan planşet scroll ölmür */
+  padding: 20px 24px;
   background: #fff;
+  min-height: 0;
 }
 
-/* Mesaj komponenti */
+.chat-input-area {
+  padding: 14px 20px;
+  border-top: 1px solid #ddd;
+  background-color: #fafafa;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+}
+
+.chat-input-area button {
+  padding: 8px 20px;
+  background: #007bff;
+  border: none;
+  color: white;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-input-area button:hover {
+  background: #0066cc;
+}
+
 .chat-message {
   display: flex;
   align-items: flex-end;
   gap: 10px;
+  margin-bottom: 12px;
 }
 
 .chat-message.self {
@@ -103,8 +103,8 @@ body,
   max-width: 65%;
   font-size: 14px;
   line-height: 1.4;
-  color: #222;
   background: #f1f1f1;
+  color: #222;
 }
 
 .chat-message.self .message-bubble {
@@ -124,7 +124,6 @@ body,
   opacity: 0.6;
 }
 
-/* Avatar */
 .avatar {
   width: 32px;
   height: 32px;
@@ -132,109 +131,48 @@ body,
   object-fit: cover;
 }
 
-/* Boş mesaj */
 .empty-message {
   text-align: center;
   margin-top: 40px;
   color: #888;
 }
 
-/* Mesaj yazma sahəsi */
-.chat-input-area {
-  flex-shrink: 0;
-  padding: 14px 20px;
-  border-top: 1px solid #ddd;
-  background-color: #fafafa;
-}
-
-.chat-input-area input {
-  flex: 1;
-  padding: 10px 16px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  outline: none;
-  /* height: 38px; */
-}
-
-.chat-input-area button {
-  margin-left: 12px;
-  padding: 8px 20px;
-  background: #007bff;
-  border: none;
-  color: white;
-  font-weight: 500;
-  border-radius: 20px;
-  /* height: 38px; */
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.chat-input-area button:hover {
-  background: #0066cc;
-}
-.name-surname {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-}
-
-.messages-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100vh;
-}
-
-/* === Doktor sidebar default === */
-.chatDoctor-sidebar {
-  width: 280px;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-right: 1px solid #ddd;
+.doctor-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.doctor-title {
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-/* === Chat sahəsi === */
-.chat-window {
-  flex: 1;
+.doctor-item {
   display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  height: 100vh;
-}
-/* ===== DARK MODE STİLLƏRİ ===== */
-body.dark {
-  background-color: #121212;
-  color: #e0e0e0;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background 0.2s;
+  cursor: pointer;
 }
 
-body.dark .messages-container {
-  background-color: #121212;
+.doctor-item:hover,
+.doctor-item.selected {
+  background:#007bff !important;
+  color: rgb(252, 252, 252);
 }
 
+.doctor-item img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ==== DARK MODE ==== */
 body.dark .chatDoctor-sidebar {
   background-color: #1e1e1e;
   border-color: #333;
-}
-
-body.dark .doctor-title,
-body.dark .chatDoctor-sidebar h3 {
-  color: #f1f1f1;
-}
-
-body.dark .doctor-item {
-  color: #ddd;
-}
-
-body.dark .doctor-item.selected {
-  background-color: #2a2d3a;
 }
 
 body.dark .chat-window {
@@ -242,9 +180,9 @@ body.dark .chat-window {
 }
 
 body.dark .chat-header {
-  background-color: #1e1e1e;
+   background: none;
   color: #ffffff;
-  border-color: #333;
+  text-shadow: 0 0 0px #92aabd, 0 0 5px #1e8de2;
 }
 
 body.dark .chat-messages {
@@ -261,11 +199,6 @@ body.dark .chat-message.self .message-bubble {
   color: white;
 }
 
-body.dark .message-time {
-  color: #aaaaaa;
-  opacity: 0.7;
-}
-
 body.dark .chat-input-area {
   background-color: #1e1e1e;
   border-top: 1px solid #333;
@@ -277,10 +210,6 @@ body.dark .chat-input-area input {
   border-color: #444;
 }
 
-body.dark .chat-input-area input::placeholder {
-  color: #aaa;
-}
-
 body.dark .chat-input-area button {
   background-color: #007bff;
 }
@@ -289,155 +218,23 @@ body.dark .chat-input-area button:hover {
   background-color: #005fb8;
 }
 
-body.dark .empty-message {
-  color: #999;
-}
+/* ==== RESPONSIVE ==== */
+@media screen and (max-width: 768px) {
+  .messages-container {
+    flex-direction: column;
+  }
 
-/* Responsive */
-@media screen and (max-width: 599px) {
   .chatDoctor-sidebar {
     width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    padding: 12px 16px;
-    background-color: #111;
-    border-bottom: 1px solid #333;
-    margin-top: 0;
-  }
-
-  .chatDoctor-sidebar h3 {
-    font-size: 16px;
-    color: #242424;
-    margin-bottom: 12px;
-  }
-
-  .doctor-list {
-    display: flex;
+    border-bottom: 1px solid #ddd;
+    border-right: none;
     flex-direction: row;
     overflow-x: auto;
-    gap: 12px;
-    padding-bottom: 8px;
-  }
-
-  .doctor-item {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    border-radius: 12px;
-    min-width: 120px;
-    text-align: center;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-    transition: 0.2s;
-  }
-
-  .doctor-item:hover,
-  .doctor-item.selected {
-    background: #2e63f5;
-  }
-
-  .doctor-item img {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 6px;
-  }
-
-  .name-surname {
-    font-size: 13px;
-    font-weight: 500;
-    color: #010101;
-  }
-}
-
-
-/* ✅ PLANSET: Yan-yana layout */
-@media screen and (min-width: 600px) and (max-width: 1024px) {
-  .messages-container {
-    display: flex;
-    flex-direction: row;
-    height: 100dvh;
-    overflow: hidden;
-  }
-
-  .chatDoctor-sidebar {
-    width: 260px;
-    background-color: #f9f9f9;
-    padding: 16px;
-    border-right: 1px solid #ddd;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    height: 100dvh;
-    flex-shrink: 0;
   }
 
   .doctor-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
-  }
-
-  .doctor-item {
-    display: flex;
-    align-items: center;
+    flex-direction: row;
     gap: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    transition: background 0.2s;
-    cursor: pointer;
-  }
-
-  .doctor-item.selected {
-    background-color: #2e63f5;
-    color: white;
-  }
-
-  .chat-window {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
-    overflow: hidden;
-  }
-
-  .chat-header {
-    padding: 16px 24px;
-    font-size: 17px;
-    border-bottom: 1px solid #ddd;
-    background-color: #fff;
-    flex-shrink: 0;
-  }
-
-  .chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 24px;
-    background-color: #fff;
-    min-height: 0; /* ❗ planset scroll üçün vacibdir */
-  }
-
-  .chat-input-area {
-    padding: 14px 20px;
-    border-top: 1px solid #ddd;
-    background-color: #fafafa;
-    flex-shrink: 0;
-  }
-}
-
-
-
-@media (max-width: 768px) {
-  .messages-container {
-    flex-direction: column;
-  }
-
-  .chatDoctor-sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #333;
   }
 
   .chat-header {
@@ -450,7 +247,7 @@ body.dark .empty-message {
   }
 
   .chat-input-area {
-    padding: 14px 16px;
+    padding: 12px 16px;
   }
 
   .message-bubble {

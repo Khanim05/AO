@@ -8,14 +8,13 @@ import axios from "axios";
 const Step2Doctor = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [categories, setCategories] = useState([]);
 
-  // Kateqoriyaları backenddən yüklə
+ 
   useEffect(() => {
     axios
       .get(
         "https://khamiyevbabek-001-site1.ktempurl.com/api/DoctorCategory/all"
       )
       .then((res) => {
-        console.log("Category response:", res.data); // 🟢 buranı əlavə et
         setCategories(res.data);
       })
 

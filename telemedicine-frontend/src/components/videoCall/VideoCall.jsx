@@ -17,95 +17,50 @@ const VideoCall = (props) => {
 
   const roomId = props.roomId ?? params.roomId;
 
-const appointmentId = useMemo(() => {
-  const rawId =
-    typeof props.roomId === "object"
-      ? props.roomId?.id
-      : props.roomId ?? location.state?.appointmentId ?? params.roomId;
+  const appointmentId = useMemo(() => {
+    const rawId =
+      typeof props.roomId === "object"
+        ? props.roomId?.id
+        : props.roomId ?? location.state?.appointmentId ?? params.roomId;
 
-  const parsed = Number(rawId);
-  return isNaN(parsed) ? null : parsed;
-}, [props.roomId, location.state, params.roomId]);
-
-console.log("🧠 props.roomId:", props.roomId);
-console.log("🧠 props.roomId.id:", props.roomId?.id);
-console.log("🧠 location.state:", location.state);
-console.log("🧠 params.roomId:", params.roomId);
-console.log("🧠 Final appointmentId:", appointmentId);
-
-
-
+    const parsed = Number(rawId);
+    return isNaN(parsed) ? null : parsed;
+  }, [props.roomId, location.state, params.roomId]);
 
   const [stream, setStream] = useState(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCamOn, setIsCamOn] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [endTime, setEndTime] = useState(null);
-  const [remainingTime, setRemainingTime] = useState("");
 
   const userVideo = useRef();
   const partnerVideo = useRef();
   const connectionRef = useRef(null);
   const peerConnections = useRef({});
 
-  // ✅ Appointment vaxtını götür
-useEffect(() => {
-  const token = localStorage.getItem("token");
-  const id = props.roomId || location.state?.appointmentId || params.roomId;
-  const appointmentId = Number(id);
-
-  console.log("📛 Token:", token);
-  console.log("📛 Appointment ID:", appointmentId);
-
-  if (!token || !appointmentId) {
-    console.warn("⛔ Token və ya appointmentId yoxdur!");
-    return;
-  }
-
-  axios
-    .get("https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/patient", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((res) => {
-      console.log("📦 Gələn cavab:", res.data);
-      const appointment = res.data.find((a) => a.id === appointmentId);
-      console.log("🎯 Tapılan appointment:", appointment);
-      if (appointment) {
-        setEndTime(new Date(appointment.endTime));
-      } else {
-        console.warn("❗ Görüş tapılmadı:", appointmentId);
-      }
-    })
-    .catch((err) => {
-      console.error("🛑 Schedule API xətası:", err);
-    });
-}, [props.roomId, location.state, params.roomId]);
-
-
-  // ✅ Qalan vaxt
+  // Görüş ID-si ilə görüşü yoxla (lazımdırsa başqa məqsədlə istifadə edə bilərsən)
   useEffect(() => {
-    if (!endTime) return;
+    const token = localStorage.getItem("token");
+    const id = props.roomId || location.state?.appointmentId || params.roomId;
+    const appointmentId = Number(id);
 
-    const interval = setInterval(() => {
-      const now = new Date();
-      const diff = Math.max(0, endTime - now);
-      const min = Math.floor(diff / 60000);
-      const sec = Math.floor((diff % 60000) / 1000);
-      setRemainingTime(
-        `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
-      );
+    if (!token || !appointmentId) return;
 
-      if (diff <= 0) {
-        clearInterval(interval);
-        connectionRef.current?.stop();
-        window.location.href = "/";
-      }
-    }, 1000);
+    axios
+      .get("https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/patient", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const appointment = res.data.find((a) => a.id === appointmentId);
+        if (!appointment) {
+          console.warn("❗ Görüş tapılmadı:", appointmentId);
+        }
+      })
+      .catch((err) => {
+        console.error("🛑 Schedule API xətası:", err);
+      });
+  }, [props.roomId, location.state, params.roomId]);
 
-    return () => clearInterval(interval);
-  }, [endTime]);
-
-  // ✅ WebRTC + SignalR bağlantısı
+  // WebRTC + SignalR bağlantısı
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -230,8 +185,6 @@ useEffect(() => {
         className="local-video"
       />
 
-      <div className="call-timer">Qalan vaxt: {remainingTime || "00:00"}</div>
-
       <div className="control-panel">
         <button className="control-button" onClick={handleToggleMic}>
           {isMicOn ? <FaMicrophone /> : <FaMicrophoneSlash />}
@@ -252,9 +205,7 @@ useEffect(() => {
           <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
             <h3>Görüşdən çıxmaq istəyirsiniz?</h3>
             <div className="custom-modal-buttons">
-              <button onClick={() => setShowConfirmModal(false)}>
-                Ləğv et
-              </button>
+              <button onClick={() => setShowConfirmModal(false)}>Ləğv et</button>
               <button
                 className="leave"
                 onClick={() => {

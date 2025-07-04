@@ -19,38 +19,36 @@ const DoctorProfile = () => {
     <div className="doctor-layout">
       {/* Sidebar */}
       <aside className="doctor-sidebar">
-        <h2>Həkim Paneli</h2>
         <nav className="doctor-nav">
           <NavLink
             to="/doctor/myProfileDoctor"
             className={({ isActive }) => (isActive ? "doctor-active-link" : "")}
           >
-            My Profile
+            Mənim Profilim
           </NavLink>
           <NavLink
             to="/doctor/appointmentD"
             className={({ isActive }) => (isActive ? "doctor-active-link" : "")}
           >
-            Appointment
+           Görüşlərim
           </NavLink>
           <NavLink
             to="/doctor/messagesD"
             className={({ isActive }) => (isActive ? "doctor-active-link" : "")}
           >
-            Messages
+            Mesajlarım
           </NavLink>
           <NavLink
             to="/doctor/settingD"
             className={({ isActive }) => (isActive ? "doctor-active-link" : "")}
           >
-            Settings
+            Tənzimləmələr
           </NavLink>
           <button className="doctor-logout-btn" onClick={handleLogout}>
-            Logout
+            Çıxış
           </button>
         </nav>
       </aside>
-
       {/* Content */}
       <main className="doctor-main">
         <div className="doctor-content">

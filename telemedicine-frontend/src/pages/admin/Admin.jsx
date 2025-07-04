@@ -40,11 +40,11 @@ const Admin = () => {
         </div>
         <nav className="admin-nav">
           <NavLink to="/admin/dashboard" className="admin-link">
-            <FaTachometerAlt /> Dashboard
+            <FaTachometerAlt /> İdarə Paneli
           </NavLink>
 
           <NavLink to="/admin/users" className="admin-link">
-            <FaUser /> Users
+            <FaUser /> İstifadəçilər
           </NavLink>
 
           {/* 🩺 Doctors Dropdown */}
@@ -54,7 +54,7 @@ const Admin = () => {
               onClick={() => setDoctorDropdown(!doctorDropdown)}
             >
               <span>
-                <FaStethoscope /> Doctors
+                <FaStethoscope /> Həkimlər
               </span>
               {doctorDropdown ? <FaChevronUp /> : <FaChevronDown />}
             </div>
@@ -64,10 +64,10 @@ const Admin = () => {
               {doctorDropdown && (
                 <>
                   <NavLink to="/admin/accept-doctor" className="admin-sublink">
-                    Accepted Doctors
+                    Təsdiqlənmiş həkimlər
                   </NavLink>
                   <NavLink to="/admin/pending-doctor" className="admin-sublink">
-                    Pending Approval
+                    Təsdiqlənməmiş həkimlər
                   </NavLink>
                   <NavLink to="/admin/doctor-seans" className="admin-sublink">
                     Seans Növü

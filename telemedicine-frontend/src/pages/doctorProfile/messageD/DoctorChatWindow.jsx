@@ -7,7 +7,9 @@ import "./chat.css";
 const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [autoScroll, setAutoScroll] = useState(false); // ✅ scroll kontrolu
   const chatEndRef = useRef(null);
+  const inputRef = useRef(null);
   const token = localStorage.getItem("token");
 
   let currentUserId = null;
@@ -20,6 +22,10 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   }
 
   useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
     if (!receiverId) return;
 
     getMessagesWithUser(receiverId)
@@ -30,6 +36,7 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
           self: m.senderId === currentUserId,
         }));
         setMessages(formatted);
+        setAutoScroll(false); // ❌ yeni pasiyent seçiləndə scroll etmə
       })
       .catch((err) => {
         console.error("Mesajlar yüklənərkən xəta baş verdi:", err);
@@ -54,6 +61,7 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
                 self: msg.senderId === currentUserId,
               },
             ]);
+            setAutoScroll(true); // ✅ yeni mesaj gələndə scroll et
           }
         });
       } catch (err) {
@@ -68,8 +76,11 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   }, [receiverId]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (autoScroll) {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      setAutoScroll(false); // ✅ yalnız bir dəfə scroll et
+    }
+  }, [messages, autoScroll]);
 
   const sendMessage = async () => {
     if (!input.trim() || connection.state !== "Connected") return;
@@ -83,7 +94,9 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
 
   return (
     <div className="chat-window">
-      <div className="chat-header" style={{marginTop:"70px"}}>{receiverName}</div>
+      <div className="chat-header" style={{ marginTop: "70px", marginLeft: "20px" }}>
+        {receiverName}
+      </div>
 
       <div className="chat-messages">
         {messages.length === 0 && (
@@ -117,6 +130,7 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
 
       <div className="chat-input-area">
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}

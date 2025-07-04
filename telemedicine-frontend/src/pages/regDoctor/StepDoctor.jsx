@@ -1,24 +1,41 @@
-import React from "react";
 import { useFormik } from "formik";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import step1Schema from "../../schema/step1D";
 import registerPhoto from "../../images/registerD.jpg";
 import { motion } from "framer-motion";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
-const StepDoctor = ({ nextStep,setFormData,formData }) => {
+const StepDoctor = ({ nextStep, setFormData, formData }) => {
   const formik = useFormik({
     initialValues: {
       Name: formData.Name || "",
       Surname: formData.Surname || "",
       Email: formData.Email || "",
-      BirthDate: formData.BirthDate || null,
+      BirthDate: formData.BirthDate || "",
     },
     validationSchema: step1Schema,
-    onSubmit: (values) => {
-      console.log(values)
-      setFormData({ ...formData, ...values });
-      nextStep();
+    onSubmit: async (values) => {
+      try {
+        const res = await axios.get(
+          `https://khamiyevbabek-001-site1.ktempurl.com/api/Account/check-email?email=${encodeURIComponent(
+            values.Email
+          )}`
+        );
+
+        if (res.data.exists) {
+          toast.error("Bu email ilə artıq qeydiyyatdan keçilib!");
+          return;
+        }
+
+        setFormData({ ...formData, ...values });
+        nextStep();
+      } catch (err) {
+        toast.error("Email yoxlanarkən xəta baş verdi.");
+        console.error("Email yoxlama xətası:", err);
+      }
     },
   });
 
@@ -31,14 +48,14 @@ const StepDoctor = ({ nextStep,setFormData,formData }) => {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="register-container-glass">
+        <ToastContainer position="top-center" autoClose={3000} />
         <div className="glass-card">
           <div className="glass-left">
             <img src={registerPhoto} alt="Həkim qeydiyyatı" />
           </div>
           <div className="glass-right">
             <h2>Həkim Qeydiyyatı</h2>
-            <form 
-            onSubmit={formik.handleSubmit} className="glass-form">
+            <form onSubmit={formik.handleSubmit} className="glass-form">
               {/* Name */}
               <div className="input-group">
                 <label>Ad</label>
@@ -80,6 +97,7 @@ const StepDoctor = ({ nextStep,setFormData,formData }) => {
                   <div className="error">{formik.errors.Surname}</div>
                 )}
               </div>
+
               {/* Email */}
               <div className="input-group">
                 <label>Email</label>
@@ -101,12 +119,14 @@ const StepDoctor = ({ nextStep,setFormData,formData }) => {
                 )}
               </div>
 
-              {/* Date of Birth */}
+              {/* BirthDate */}
               <div className="input-group">
                 <label>Doğum Tarixi</label>
                 <DatePicker
                   selected={formik.values.BirthDate}
-                  onChange={(date) => formik.setFieldValue("BirthDate", date)}
+                  onChange={(date) =>
+                    formik.setFieldValue("BirthDate", date)
+                  }
                   onBlur={formik.handleBlur}
                   name="BirthDate"
                   placeholderText="Tarix seçin"
@@ -140,6 +160,7 @@ const StepDoctor = ({ nextStep,setFormData,formData }) => {
             </form>
           </div>
         </div>
+        <ToastContainer/>
       </div>
     </motion.div>
   );

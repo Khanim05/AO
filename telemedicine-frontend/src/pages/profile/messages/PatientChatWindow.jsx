@@ -81,7 +81,7 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
 
   useEffect(() => {
     if (autoScroll) {
-      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       setAutoScroll(false); // bir dəfəlik scroll et
     }
   }, [messages, autoScroll]);
@@ -98,7 +98,7 @@ const PatientChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
 
   return (
     <div className="chat-window">
-      <div className="chat-header">{receiverName}</div>
+      <div className="chat-header" style={{marginTop:"70px",marginLeft:"20px"}}>{receiverName}</div>
 
       <div className="chat-messages">
         {messages.length === 0 && (
