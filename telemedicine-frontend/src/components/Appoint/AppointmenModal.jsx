@@ -1,4 +1,3 @@
-// AppointmentModal.jsx (Step-by-step, polished UI)
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -14,9 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./appointmentModal.css";
 
-const stripePromise = loadStripe(
-  "pk_test_51RgvdZ2exYP6TLMk5SlzdsKJdWBmJrgmqtdgq6X5tdn0ZXuhGFlo2ZVCPoZAxFGcl7a0SScgBLpb6pZvkqASZ7nC00HRqVrnQn"
-);
+const stripePromise = loadStripe("pk_test_51RgvdZ2exYP6TLMk5SlzdsKJdWBmJrgmqtdgq6X5tdn0ZXuhGFlo2ZVCPoZAxFGcl7a0SScgBLpb6pZvkqASZ7nC00HRqVrnQn");
 
 const AppointmentModal = ({ doctorId, doctorName, onClose }) => {
   return (
@@ -42,6 +39,8 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
   const stripe = useStripe();
   const elements = useElements();
 
+  const now = new Date();
+
   const formatDateForApi = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -57,9 +56,7 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
 
   useEffect(() => {
     axios
-      .get(
-        `https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/available-dates/${doctorId}`
-      )
+      .get(`https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/available-dates/${doctorId}`)
       .then((res) => {
         const dates = res.data.map((d) => {
           const [y, m, day] = d.split("T")[0].split("-");
@@ -76,15 +73,12 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
   useEffect(() => {
     if (!selectedDate) return;
     axios
-      .get(
-        "https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/available-slots",
-        {
-          params: {
-            doctorId,
-            date: formatDateForApi(selectedDate),
-          },
-        }
-      )
+      .get("https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/available-slots", {
+        params: {
+          doctorId,
+          date: formatDateForApi(selectedDate),
+        },
+      })
       .then((res) => {
         const slots = res.data.map((s) => ({
           time: s.start,
@@ -116,8 +110,7 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
       },
     });
 
-    if (result.error)
-      return toast.error("Kart məlumatları düzgün daxil edilməyib.");
+    if (result.error) return toast.error("Kart məlumatları düzgün daxil edilməyib.");
     if (result.paymentIntent?.status === "succeeded") {
       await axios.post(
         "https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/book",
@@ -129,34 +122,35 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const formatted = `${formatDateDisplay(
-        selectedDate
-      )} - ${formatHourMinute(selectedSlot.time)} - ${formatHourMinute(
-        selectedSlot.end
-      )}`;
-
-      setConfirmationMsg(
-        `✅ Siz ${doctorName} ilə ${formatted} görüş üçün ödəniş etdiniz.`
-      );
+      const formatted = `${formatDateDisplay(selectedDate)} - ${formatHourMinute(selectedSlot.time)} - ${formatHourMinute(selectedSlot.end)}`;
+      setConfirmationMsg(`✅ Siz ${doctorName} ilə ${formatted} görüş üçün ödəniş etdiniz.`);
       setStep(4);
     }
   };
 
   useEffect(() => {
-  if (step === 4) {
-    const timeout = setTimeout(() => {
-      document.querySelector('.confirm-btn')?.focus();
-    }, 5000);
-    return () => clearTimeout(timeout);
-  }
-}, [step]);
+    if (step === 4) {
+      const timeout = setTimeout(() => {
+        document.querySelector(".confirm-btn")?.focus();
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [step]);
+
+  // 💡 Filter keçmiş saatları bugünkü tarix üçün
+  const filteredSlots = availableSlots.filter((slot) => {
+    if (!selectedDate) return false;
+    const [h, m] = slot.time.split(":").map(Number);
+    const slotTime = new Date(selectedDate);
+    slotTime.setHours(h, m, 0, 0);
+
+    return selectedDate.toDateString() !== now.toDateString() || slotTime > now;
+  });
 
   return (
     <div className="modal-overlay">
       <div className="modal-content" style={{ position: "static" }}>
-        <button className="close-btn" onClick={onClose}>
-          ✖
-        </button>
+        <button className="close-btn" onClick={onClose}>✖</button>
         <ToastContainer />
 
         {step === 1 && (
@@ -171,19 +165,17 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
               includeDates={availableDates}
               minDate={new Date()}
               placeholderText="Tarix seçin"
-              dateFormat="dd/MM/yyyy" // AYAR BURDA
+              dateFormat="dd/MM/yyyy"
               portalId="root-datepicker-portal"
             />
 
-            {selectedDate && availableSlots.length > 0 && (
+            {selectedDate && filteredSlots.length > 0 && (
               <div className="slots-container">
-                {availableSlots.map((slot) => (
+                {filteredSlots.map((slot) => (
                   <button
                     key={slot.scheduleId}
                     className={`slot-btn ${
-                      selectedSlot?.scheduleId === slot.scheduleId
-                        ? "selected"
-                        : ""
+                      selectedSlot?.scheduleId === slot.scheduleId ? "selected" : ""
                     }`}
                     onClick={() => setSelectedSlot(slot)}
                   >
@@ -192,6 +184,7 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
                 ))}
               </div>
             )}
+
             <button
               className="confirm-btn"
               onClick={() => selectedSlot && setStep(2)}
@@ -227,14 +220,16 @@ const AppointmentModalInner = ({ doctorId, doctorName, onClose }) => {
         )}
 
         {step === 4 && (
-  <div className="confirmation-message modern-success">
-    <div className="circle-loader success">
-      <div className="checkmark draw"></div>
-    </div>
-    <p>{confirmationMsg}</p>
-    <button className="confirm-btn" onClick={onClose}>Bağla</button>
-  </div>
-)}
+          <div className="confirmation-message modern-success">
+            <div className="circle-loader success">
+              <div className="checkmark draw"></div>
+            </div>
+            <p>{confirmationMsg}</p>
+            <button className="confirm-btn" onClick={onClose}>
+              Bağla
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

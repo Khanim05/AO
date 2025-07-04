@@ -22,15 +22,7 @@ const VideoCall = (props) => {
       typeof props.roomId === "object"
         ? props.roomId?.id
         : props.roomId ?? location.state?.appointmentId ?? params.roomId;
-  const appointmentId = useMemo(() => {
-    const rawId =
-      typeof props.roomId === "object"
-        ? props.roomId?.id
-        : props.roomId ?? location.state?.appointmentId ?? params.roomId;
 
-    const parsed = Number(rawId);
-    return isNaN(parsed) ? null : parsed;
-  }, [props.roomId, location.state, params.roomId]);
     const parsed = Number(rawId);
     return isNaN(parsed) ? null : parsed;
   }, [props.roomId, location.state, params.roomId]);
@@ -49,18 +41,14 @@ const VideoCall = (props) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token || !appointmentId) return;
-  // Görüş ID-si ilə görüşü yoxla (lazımdırsa başqa məqsədlə istifadə edə bilərsən)
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const id = props.roomId || location.state?.appointmentId || params.roomId;
-    const appointmentId = Number(id);
-
-    if (!token || !appointmentId) return;
 
     axios
-      .get("https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/patient", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .get(
+        "https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/patient",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
       .then((res) => {
         const appointment = res.data.find((a) => a.id === appointmentId);
         if (!appointment) {
@@ -73,22 +61,6 @@ const VideoCall = (props) => {
   }, [appointmentId]);
 
   // 🧠 WebRTC + SignalR bağlantısı
-    axios
-      .get("https://khamiyevbabek-001-site1.ktempurl.com/api/Schedule/patient", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        const appointment = res.data.find((a) => a.id === appointmentId);
-        if (!appointment) {
-          console.warn("❗ Görüş tapılmadı:", appointmentId);
-        }
-      })
-      .catch((err) => {
-        console.error("🛑 Schedule API xətası:", err);
-      });
-  }, [props.roomId, location.state, params.roomId]);
-
-  // WebRTC + SignalR bağlantısı
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token || !roomId) return;
@@ -108,7 +80,9 @@ const VideoCall = (props) => {
         if (userVideo.current) userVideo.current.srcObject = localStream;
 
         connection.on("AllUsers", (users) => {
-          users.forEach((userId) => createOffer(userId, localStream));
+          setTimeout(() => {
+            users.forEach((userId) => createOffer(userId, localStream));
+          }, 1000); // 1 saniyə gecikmə (bunu 500ms də edə bilərsən)
         });
 
         connection.on("UserJoined", (userId) => {
@@ -174,7 +148,9 @@ const VideoCall = (props) => {
   const createOffer = async (toId, localStream) => {
     const peer = createPeer(toId);
     peerConnections.current[toId] = peer;
-    localStream.getTracks().forEach((track) => peer.addTrack(track, localStream));
+    localStream
+      .getTracks()
+      .forEach((track) => peer.addTrack(track, localStream));
     const offer = await peer.createOffer();
     await peer.setLocalDescription(offer);
     connectionRef.current?.invoke("SendOffer", toId, JSON.stringify(offer));
@@ -183,7 +159,9 @@ const VideoCall = (props) => {
   const createAnswer = async (fromId, localStream, offer) => {
     const peer = createPeer(fromId);
     peerConnections.current[fromId] = peer;
-    localStream.getTracks().forEach((track) => peer.addTrack(track, localStream));
+    localStream
+      .getTracks()
+      .forEach((track) => peer.addTrack(track, localStream));
     await peer.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await peer.createAnswer();
     await peer.setLocalDescription(answer);
@@ -191,12 +169,16 @@ const VideoCall = (props) => {
   };
 
   const handleToggleMic = () => {
-    stream?.getAudioTracks().forEach((track) => (track.enabled = !track.enabled));
+    stream
+      ?.getAudioTracks()
+      .forEach((track) => (track.enabled = !track.enabled));
     setIsMicOn((prev) => !prev);
   };
 
   const handleToggleCam = () => {
-    stream?.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
+    stream
+      ?.getVideoTracks()
+      .forEach((track) => (track.enabled = !track.enabled));
     setIsCamOn((prev) => !prev);
   };
 
@@ -205,7 +187,6 @@ const VideoCall = (props) => {
   return (
     <div className="video-call-container">
       <video ref={partnerVideo} autoPlay playsInline className="remote-video" />
-      <video ref={userVideo} autoPlay playsInline muted className="local-video" />
       <video
         ref={userVideo}
         autoPlay
@@ -227,12 +208,16 @@ const VideoCall = (props) => {
       </div>
 
       {showConfirmModal && (
-        <div className="custom-backdrop" onClick={() => setShowConfirmModal(false)}>
+        <div
+          className="custom-backdrop"
+          onClick={() => setShowConfirmModal(false)}
+        >
           <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
             <h3>Görüşdən çıxmaq istəyirsiniz?</h3>
             <div className="custom-modal-buttons">
-              <button onClick={() => setShowConfirmModal(false)}>Ləğv et</button>
-              <button onClick={() => setShowConfirmModal(false)}>Ləğv et</button>
+              <button onClick={() => setShowConfirmModal(false)}>
+                Ləğv et
+              </button>
               <button
                 className="leave"
                 onClick={() => {
