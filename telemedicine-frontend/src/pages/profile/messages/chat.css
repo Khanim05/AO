@@ -179,6 +179,10 @@ body.dark .chat-window {
   background-color: #121212;
 }
 
+body.dark .name-surname{
+  color: black;
+}
+
 body.dark .chat-header {
    background: none;
   color: #ffffff;

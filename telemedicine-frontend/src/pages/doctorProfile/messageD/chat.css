@@ -34,11 +34,13 @@
   padding: 10px 20px;
   cursor: pointer;
   transition: background 0.2s ease;
+  background: whitesmoke !important;
 }
 
 .doctor-item:hover,
 .doctor-item.selected {
-  background: #e6f0ff;
+ background:#007bff !important;
+  color: rgb(252, 252, 252);
 }
 
 .doctor-item img {

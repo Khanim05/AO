@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getMessagesWithUser } from "../../../services/chatService";
 import { jwtDecode } from "jwt-decode";
 import "./chat.css";
-import connection from "../../../sockets/chatHub";
 import { useDispatch } from "react-redux";
-import { setCurrentReceiverId,clearCurrentReceiverId } from "../../../redux/slice/chatSlice";
+import { setCurrentReceiverId, clearCurrentReceiverId } from "../../../redux/slice/chatSlice";
 
 const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
   const [messages, setMessages] = useState([]);
@@ -36,7 +35,7 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
           self: m.senderId === currentUserId,
         }));
         setMessages(formatted);
-        setAutoScroll(false);
+        setAutoScroll(true);
       })
       .catch((err) => {
         console.error("Mesajlar yüklənərkən xəta baş verdi:", err);
@@ -50,53 +49,54 @@ const DoctorChatWindow = ({ receiverId, receiverName, receiverAvatar }) => {
     }
   }, [messages, autoScroll]);
 
+  // ✅ Real-time mesaj qəbul et
+
+
+  // ✅ Mesaj göndər
   const sendMessage = async () => {
     if (!input.trim()) return;
+
+    const newMessage = {
+      content: input,
+      createdAt: new Date().toISOString(),
+      self: true,
+    };
+
     try {
       const connection = (await import("../../../sockets/chatHub")).default;
       if (connection.state !== "Connected") await connection.start();
 
       await connection.invoke("SendMessage", receiverId, input);
+
+      setMessages((prev) => [...prev, newMessage]);
       setInput("");
+      setAutoScroll(true);
     } catch (err) {
       console.error("SendMessage xətası:", err);
     }
   };
-useEffect(() => {
-  const setupSignalR = async () => {
-    if (connection.state === "Disconnected") {
-      await connection.start();
+
+  useEffect(() => {
+    if (receiverId) {
+      dispatch(setCurrentReceiverId(receiverId));
     }
+    return () => {
+      dispatch(clearCurrentReceiverId());
+    };
+  }, [receiverId]);
 
-    connection.off("ReceiveMessage"); // təmizləyirik
-    connection.on("ReceiveMessage", (msg) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          content: msg.message,
-          createdAt: msg.sentAt,
-          self: msg.senderId === currentUserId,
-        },
-      ]);
-      setAutoScroll(true);
-    });
+  useEffect(() => {
+  const handleNewMessage = (e) => {
+    console.log("📩 Mesaj UI pəncərəsinə çatdı:", e.detail);
+    setMessages((prev) => [...prev, e.detail]);
+    setAutoScroll(true);
   };
 
-  setupSignalR();
+  window.addEventListener("newMessageReceived", handleNewMessage);
   return () => {
-    connection.off("ReceiveMessage");
+    window.removeEventListener("newMessageReceived", handleNewMessage);
   };
-}, [receiverId]);
-
-useEffect(() => {
-  if (receiverId) {
-    dispatch(setCurrentReceiverId(receiverId));
-  }
-
-  return () => {
-    dispatch(clearCurrentReceiverId());
-  };
-}, [receiverId]);
+}, []);
 
 
   return (
@@ -118,7 +118,10 @@ useEffect(() => {
             <div className="message-bubble">
               <div>{m.content}</div>
               <div className="message-time">
-                {new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                {new Date(m.createdAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </div>
             </div>
           </div>
